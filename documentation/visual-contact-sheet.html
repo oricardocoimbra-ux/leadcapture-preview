@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeadCapture — Folha de Contacto Visual (51 Referências)</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 32px;
+      background: #07080b; color: #f4f4f5;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    header {
+      max-width: 1500px; margin: 0 auto 28px;
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px;
+      border-bottom: 1px solid rgba(245, 184, 0, 0.25); padding-bottom: 20px;
+    }
+    h1 { margin: 0; font-size: 1.6rem; }
+    h1 span { color: #F5B800; }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+    button {
+      background: #14161c; color: #e4e4e7; border: 1px solid rgba(245,184,0,0.28);
+      padding: 8px 14px; border-radius: 999px; cursor: pointer; font-size: 0.85rem;
+    }
+    button.active, button:hover { background: #F5B800; color: #090a0d; font-weight: 600; }
+    .grid {
+      max-width: 1500px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 20px;
+    }
+    .card {
+      background: #101218; border: 1px solid rgba(245, 184, 0, 0.22);
+      border-radius: 14px; overflow: hidden; display: flex; flex-direction: column;
+    }
+    .thumb-wrap { position: relative; background: #050507; aspect-ratio: 2/3; overflow: hidden; }
+    .thumb-wrap img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+    .badge-id {
+      position: absolute; top: 10px; left: 10px;
+      background: rgba(5,5,7,0.88); color: #F5B800; border: 1px solid rgba(245,184,0,0.45);
+      padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-status {
+      position: absolute; top: 10px; right: 10px;
+      padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    }
+    .status-principal { background: #F5B800; color: #090a0d; }
+    .status-complementar { background: #1e293b; color: #fde047; border: 1px solid rgba(245,184,0,0.35); }
+    .status-alternativa { background: #27272a; color: #d4d4d8; }
+    .meta { padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+    .meta h3 { margin: 0; font-size: 0.98rem; color: #ffffff; }
+    .orig { margin: 0; font-size: 0.78rem; color: #a1a1aa; word-break: break-word; }
+    .tags { display: flex; justify-content: space-between; font-size: 0.75rem; color: #F5B800; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>LeadCapture — <span>Folha de Contacto Visual</span> (51 Imagens)</h1>
+      <p style="margin:6px 0 0;color:#a1a1aa;font-size:0.9rem;">Miniaturas com identificadores REF-01 a REF-51 para revisão visual.</p>
+    </div>
+    <div class="filters">
+      <button class="active" onclick="filterCards('all', this)">Todas (51)</button>
+      <button onclick="filterCards('principal', this)">Principal (22)</button>
+      <button onclick="filterCards('complementar', this)">Complementar (13)</button>
+      <button onclick="filterCards('alternativa', this)">Alternativa (16)</button>
+    </div>
+  </header>
+  <main class="grid">
+    
+    <article class="card" data-status="principal" data-cat="Serviço">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-3-services/service-automacao-ia-principal.png" alt="Automação e IA para Negócios Crescerem.png" loading="lazy" />
+        <span class="badge-id">REF-01</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 15 — Automação e IA</h3>
+        <p class="orig">Automação e IA para Negócios Crescerem.png</p>
+        <div class="tags">
+          <span>Serviço</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Institucional">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-4-institutional/institutional-casos-sucesso-principal.png" alt="Casos de Sucesso LeadCapture.png" loading="lazy" />
+        <span class="badge-id">REF-02</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 20 — Casos de Sucesso</h3>
+        <p class="orig">Casos de Sucesso LeadCapture.png</p>
+        <div class="tags">
+          <span>Institucional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="complementar" data-cat="Secção Adicional">
+      <div class="thumb-wrap">
+        <img src="../design/references/additional-sections/section-como-funciona-4-passos.png" alt="Como funciona a LeadCapture_-2.png" loading="lazy" />
+        <span class="badge-id">REF-03</span>
+        <span class="badge-status status-complementar">complementar</span>
+      </div>
+      <div class="meta">
+        <h3>Secção Como Funciona</h3>
+        <p class="orig">Como funciona a LeadCapture_-2.png</p>
+        <div class="tags">
+          <span>Secção Adicional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="complementar" data-cat="Secção Adicional">
+      <div class="thumb-wrap">
+        <img src="../design/references/additional-sections/section-confianca-testemunhos.png" alt="Confiança e Resultados LeadCapture-7.png" loading="lazy" />
+        <span class="badge-id">REF-04</span>
+        <span class="badge-status status-complementar">complementar</span>
+      </div>
+      <div class="meta">
+        <h3>Secção Confiança e Testemunhos</h3>
+        <p class="orig">Confiança e Resultados LeadCapture-7.png</p>
+        <div class="tags">
+          <span>Secção Adicional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Comercial">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-2-commercial/commercial-demonstracoes-principal.png" alt="Demonstrações LeadCapture por Setor.png" loading="lazy" />
+        <span class="badge-id">REF-05</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Demonstrações</h3>
+        <p class="orig">Demonstrações LeadCapture por Setor.png</p>
+        <div class="tags">
+          <span>Comercial</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="complementar" data-cat="Secção Adicional">
+      <div class="thumb-wrap">
+        <img src="../design/references/additional-sections/section-ecossistema-integracoes.png" alt="Ecossistema 360° de Integrações LeadCapture-5.png" loading="lazy" />
+        <span class="badge-id">REF-06</span>
+        <span class="badge-status status-complementar">complementar</span>
+      </div>
+      <div class="meta">
+        <h3>Secção Integrações</h3>
+        <p class="orig">Ecossistema 360° de Integrações LeadCapture-5.png</p>
+        <div class="tags">
+          <span>Secção Adicional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Serviço">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-3-services/service-marketing-digital-principal.png" alt="Estratégia de Marketing Digital em Destaque.png" loading="lazy" />
+        <span class="badge-id">REF-07</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 14 — Marketing Digital</h3>
+        <p class="orig">Estratégia de Marketing Digital em Destaque.png</p>
+        <div class="tags">
+          <span>Serviço</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Institucional">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-4-institutional/institutional-faq-principal.png" alt="FAQ LeadCapture em Dourado e Preto.png" loading="lazy" />
+        <span class="badge-id">REF-08</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 22 — FAQ</h3>
+        <p class="orig">FAQ LeadCapture em Dourado e Preto.png</p>
+        <div class="tags">
+          <span>Institucional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="complementar" data-cat="Por Negócio">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-1-business/business-hotelaria-turismo-expansao.png" alt="Landing Page Hotelaria &amp; Turismo 360°.png" loading="lazy" />
+        <span class="badge-id">REF-09</span>
+        <span class="badge-status status-complementar">complementar</span>
+      </div>
+      <div class="meta">
+        <h3>Expansão — Hotelaria &amp; Turismo</h3>
+        <p class="orig">Landing Page Hotelaria &amp; Turismo 360°.png</p>
+        <div class="tags">
+          <span>Por Negócio</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Alternativa">
+      <div class="thumb-wrap">
+        <img src="../design/references/alternative-designs/alt-contactos-hero-humano-footer.png" alt="Landing Page LeadCapture em Dourado e Preto-2.png" loading="lazy" />
+        <span class="badge-id">REF-10</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 21 — Contactos + Footer</h3>
+        <p class="orig">Landing Page LeadCapture em Dourado e Preto-2.png</p>
+        <div class="tags">
+          <span>Alternativa</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Comercial">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-2-commercial/commercial-homepage-principal.png" alt="Landing Page LeadCapture em Preto e Dourado.png" loading="lazy" />
+        <span class="badge-id">REF-11</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Início (Homepage)</h3>
+        <p class="orig">Landing Page LeadCapture em Preto e Dourado.png</p>
+        <div class="tags">
+          <span>Comercial</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Alternativa">
+      <div class="thumb-wrap">
+        <img src="../design/references/alternative-designs/alt-proximos-passos-whatsapp.png" alt="Landing page LeadCapturé em destaque-5.png" loading="lazy" />
+        <span class="badge-id">REF-12</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Pedir Demo / Contactos</h3>
+        <p class="orig">Landing page LeadCapturé em destaque-5.png</p>
+        <div class="tags">
+          <span>Alternativa</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="complementar" data-cat="Por Negócio">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-1-business/business-automovel-mobilidade-expansao.png" alt="LeadCapture Automóvel &amp; Mobilidade.png" loading="lazy" />
+        <span class="badge-id">REF-13</span>
+        <span class="badge-status status-complementar">complementar</span>
+      </div>
+      <div class="meta">
+        <h3>Expansão — Automóvel</h3>
+        <p class="orig">LeadCapture Automóvel &amp; Mobilidade.png</p>
+        <div class="tags">
+          <span>Por Negócio</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="complementar" data-cat="Por Negócio">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-1-business/business-construcao-remodelacoes-expansao.png" alt="LeadCapture Construção 360°.png" loading="lazy" />
+        <span class="badge-id">REF-14</span>
+        <span class="badge-status status-complementar">complementar</span>
+      </div>
+      <div class="meta">
+        <h3>Expansão — Construção</h3>
+        <p class="orig">LeadCapture Construção 360°.png</p>
+        <div class="tags">
+          <span>Por Negócio</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Por Negócio">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-1-business/business-saude-bem-estar-principal.png" alt="LeadCapture Saúde e Bem-Estar.png" loading="lazy" />
+        <span class="badge-id">REF-15</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 6 — Saúde e Bem-Estar</h3>
+        <p class="orig">LeadCapture Saúde e Bem-Estar.png</p>
+        <div class="tags">
+          <span>Por Negócio</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Por Negócio">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-1-business/business-beleza-estetica-principal.png" alt="LeadCapture_ Beleza 360° Digital.png" loading="lazy" />
+        <span class="badge-id">REF-16</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 2 — Beleza e Estética</h3>
+        <p class="orig">LeadCapture_ Beleza 360° Digital.png</p>
+        <div class="tags">
+          <span>Por Negócio</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Serviço">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-3-services/service-crm-sistemas-principal.png" alt="LeadCapture_ CRM &amp; Sistemas Digitais.png" loading="lazy" />
+        <span class="badge-id">REF-17</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 13 — CRM e Sistemas</h3>
+        <p class="orig">LeadCapture_ CRM &amp; Sistemas Digitais.png</p>
+        <div class="tags">
+          <span>Serviço</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Institucional">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-4-institutional/institutional-sobre-nos-principal.png" alt="LeadCapture_ Crescimento com Tecnologia.png" loading="lazy" />
+        <span class="badge-id">REF-18</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 18 — Sobre Nós</h3>
+        <p class="orig">LeadCapture_ Crescimento com Tecnologia.png</p>
+        <div class="tags">
+          <span>Institucional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="complementar" data-cat="Secção Adicional">
+      <div class="thumb-wrap">
+        <img src="../design/references/additional-sections/section-diferenciais-testemunhos-faq.png" alt="LeadCapture_ Cresça com Confiança-3.png" loading="lazy" />
+        <span class="badge-id">REF-19</span>
+        <span class="badge-status status-complementar">complementar</span>
+      </div>
+      <div class="meta">
+        <h3>Secção Diferenciais + FAQ</h3>
+        <p class="orig">LeadCapture_ Cresça com Confiança-3.png</p>
+        <div class="tags">
+          <span>Secção Adicional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Alternativa">
+      <div class="thumb-wrap">
+        <img src="../design/references/alternative-designs/alt-contactos-mapa-portugal.png" alt="LeadCapture_ Digitalize o Seu Negócio-3.png" loading="lazy" />
+        <span class="badge-id">REF-20</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 21 — Contactos (Mapa PT)</h3>
+        <p class="orig">LeadCapture_ Digitalize o Seu Negócio-3.png</p>
+        <div class="tags">
+          <span>Alternativa</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Comercial">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-2-commercial/commercial-pedir-demonstracao-principal.png" alt="LeadCapture_ Dê o Próximo Passo-4.png" loading="lazy" />
+        <span class="badge-id">REF-21</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pedir Demonstração</h3>
+        <p class="orig">LeadCapture_ Dê o Próximo Passo-4.png</p>
+        <div class="tags">
+          <span>Comercial</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Alternativa">
+      <div class="thumb-wrap">
+        <img src="../design/references/alternative-designs/alt-proximos-passos-caneca.png" alt="LeadCapture_ Dê o Próximo Passo-7.png" loading="lazy" />
+        <span class="badge-id">REF-22</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Pedir Demo / Contactos</h3>
+        <p class="orig">LeadCapture_ Dê o Próximo Passo-7.png</p>
+        <div class="tags">
+          <span>Alternativa</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Por Negócio">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-1-business/business-imobiliario-principal.png" alt="LeadCapture_ Soluções Imobiliárias 360º.png" loading="lazy" />
+        <span class="badge-id">REF-23</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 1 — Imobiliário</h3>
+        <p class="orig">LeadCapture_ Soluções Imobiliárias 360º.png</p>
+        <div class="tags">
+          <span>Por Negócio</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Serviço">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-3-services/service-lojas-online-hero-champagne.png" alt="Lojas Online com Design Premium-2.png" loading="lazy" />
+        <span class="badge-id">REF-24</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 12 — Lojas Online (Hero)</h3>
+        <p class="orig">Lojas Online com Design Premium-2.png</p>
+        <div class="tags">
+          <span>Serviço</span>
+          <span>1671×941</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Alternativa">
+      <div class="thumb-wrap">
+        <img src="../design/references/alternative-designs/alt-lojas-online-hero-roxo.png" alt="Lojas Online com Estilo e Inovação-1.png" loading="lazy" />
+        <span class="badge-id">REF-25</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 12 — Lojas Online (Roxo)</h3>
+        <p class="orig">Lojas Online com Estilo e Inovação-1.png</p>
+        <div class="tags">
+          <span>Alternativa</span>
+          <span>1672×941</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="complementar" data-cat="Por Negócio">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-1-business/business-saude-bem-estar-spec-sheet.png" alt="Mockup LeadCapture Saúde &amp; Bem-Estar.png" loading="lazy" />
+        <span class="badge-id">REF-26</span>
+        <span class="badge-status status-complementar">complementar</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 6 — Spec Sheet Imagens</h3>
+        <p class="orig">Mockup LeadCapture Saúde &amp; Bem-Estar.png</p>
+        <div class="tags">
+          <span>Por Negócio</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="complementar" data-cat="Secção Adicional">
+      <div class="thumb-wrap">
+        <img src="../design/references/additional-sections/section-nosso-processo-timeline.png" alt="O Nosso Processo_ Simples e Focado em Resultados-1.png" loading="lazy" />
+        <span class="badge-id">REF-27</span>
+        <span class="badge-status status-complementar">complementar</span>
+      </div>
+      <div class="meta">
+        <h3>Secção O Nosso Processo</h3>
+        <p class="orig">O Nosso Processo_ Simples e Focado em Resultados-1.png</p>
+        <div class="tags">
+          <span>Secção Adicional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Institucional">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-4-institutional/institutional-portfolio-principal.png" alt="Portefólio LeadCapture_ Projetos Reais, Resultados Concretos.png" loading="lazy" />
+        <span class="badge-id">REF-28</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 19 — Portefólio</h3>
+        <p class="orig">Portefólio LeadCapture_ Projetos Reais, Resultados Concretos.png</p>
+        <div class="tags">
+          <span>Institucional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Institucional">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-4-institutional/institutional-casos-sucesso-alternativa-1.png" alt="Portefólio LeadCapture_ Resultados que Falam-4.png" loading="lazy" />
+        <span class="badge-id">REF-29</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 20 — Casos de Sucesso</h3>
+        <p class="orig">Portefólio LeadCapture_ Resultados que Falam-4.png</p>
+        <div class="tags">
+          <span>Institucional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Serviço">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-3-services/service-redes-sociais-principal.png" alt="Presença Digital em Destaque.png" loading="lazy" />
+        <span class="badge-id">REF-30</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 16 — Redes Sociais</h3>
+        <p class="orig">Presença Digital em Destaque.png</p>
+        <div class="tags">
+          <span>Serviço</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Comercial">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-2-commercial/commercial-precos-alternativa.png" alt="Preços e Planos LeadCapture.png" loading="lazy" />
+        <span class="badge-id">REF-31</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Preços (Toggle)</h3>
+        <p class="orig">Preços e Planos LeadCapture.png</p>
+        <div class="tags">
+          <span>Comercial</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="complementar" data-cat="Secção Adicional">
+      <div class="thumb-wrap">
+        <img src="../design/references/additional-sections/section-processo-5-passos-area-cliente.png" alt="Processo LeadCapture_ simples e transparente-1.png" loading="lazy" />
+        <span class="badge-id">REF-32</span>
+        <span class="badge-status status-complementar">complementar</span>
+      </div>
+      <div class="meta">
+        <h3>Secção Processo + Portal</h3>
+        <p class="orig">Processo LeadCapture_ simples e transparente-1.png</p>
+        <div class="tags">
+          <span>Secção Adicional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="complementar" data-cat="Secção Adicional">
+      <div class="thumb-wrap">
+        <img src="../design/references/additional-sections/section-processo-pos-compra.png" alt="Processo Pós-Compra LeadCapture-2.png" loading="lazy" />
+        <span class="badge-id">REF-33</span>
+        <span class="badge-status status-complementar">complementar</span>
+      </div>
+      <div class="meta">
+        <h3>Secção Pós-Compra</h3>
+        <p class="orig">Processo Pós-Compra LeadCapture-2.png</p>
+        <div class="tags">
+          <span>Secção Adicional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Institucional">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-4-institutional/institutional-faq-alternativa.png" alt="Página FAQ LeadCapture em Destaque-3.png" loading="lazy" />
+        <span class="badge-id">REF-34</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 22 — FAQ (Sidebar)</h3>
+        <p class="orig">Página FAQ LeadCapture em Destaque-3.png</p>
+        <div class="tags">
+          <span>Institucional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Institucional">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-4-institutional/institutional-contactos-principal.png" alt="Página de Contactos LeadCapture em Portugal.png" loading="lazy" />
+        <span class="badge-id">REF-35</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 21 — Contactos</h3>
+        <p class="orig">Página de Contactos LeadCapture em Portugal.png</p>
+        <div class="tags">
+          <span>Institucional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Institucional">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-4-institutional/institutional-pedir-orcamento-principal.png" alt="Página de Orçamento LeadCapture em Preto e Dourado.png" loading="lazy" />
+        <span class="badge-id">REF-36</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 23 — Pedir Orçamento</h3>
+        <p class="orig">Página de Orçamento LeadCapture em Preto e Dourado.png</p>
+        <div class="tags">
+          <span>Institucional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Comercial">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-2-commercial/commercial-precos-principal.png" alt="Página de Preços LeadCapture em Destaque.png" loading="lazy" />
+        <span class="badge-id">REF-37</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Preços</h3>
+        <p class="orig">Página de Preços LeadCapture em Destaque.png</p>
+        <div class="tags">
+          <span>Comercial</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Comercial">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-2-commercial/commercial-recursos-alternativa.png" alt="Recursos LeadCapture para Crescer-6.png" loading="lazy" />
+        <span class="badge-id">REF-38</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Recursos (Downloads)</h3>
+        <p class="orig">Recursos LeadCapture para Crescer-6.png</p>
+        <div class="tags">
+          <span>Comercial</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Comercial">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-2-commercial/commercial-recursos-principal.png" alt="Recursos LeadCapture_ Crescimento Digital-1.png" loading="lazy" />
+        <span class="badge-id">REF-39</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Recursos</h3>
+        <p class="orig">Recursos LeadCapture_ Crescimento Digital-1.png</p>
+        <div class="tags">
+          <span>Comercial</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Institucional">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-4-institutional/institutional-casos-sucesso-alternativa-2.png" alt="Resultados Reais_ Marcas que Crescem-1.png" loading="lazy" />
+        <span class="badge-id">REF-40</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 20 — Casos de Sucesso</h3>
+        <p class="orig">Resultados Reais_ Marcas que Crescem-1.png</p>
+        <div class="tags">
+          <span>Institucional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Por Negócio">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-1-business/business-retalho-ecommerce-principal.png" alt="Retalho 360º_ Mais Visibilidade, Mais Vendas.png" loading="lazy" />
+        <span class="badge-id">REF-41</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 4 — Retalho e E-commerce</h3>
+        <p class="orig">Retalho 360º_ Mais Visibilidade, Mais Vendas.png</p>
+        <div class="tags">
+          <span>Por Negócio</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Por Negócio">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-1-business/business-restauracao-principal.png" alt="Soluções Digitais para Restauração.png" loading="lazy" />
+        <span class="badge-id">REF-42</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 3 — Restauração</h3>
+        <p class="orig">Soluções Digitais para Restauração.png</p>
+        <div class="tags">
+          <span>Por Negócio</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Por Negócio">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-1-business/business-servicos-profissionais-principal.png" alt="Soluções Digitais para Serviços Profissionais.png" loading="lazy" />
+        <span class="badge-id">REF-43</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 5 — Serviços Profissionais</h3>
+        <p class="orig">Soluções Digitais para Serviços Profissionais.png</p>
+        <div class="tags">
+          <span>Por Negócio</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Comercial">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-2-commercial/commercial-solucoes-hub-principal.png" alt="Soluções LeadCapture para Crescer.png" loading="lazy" />
+        <span class="badge-id">REF-44</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Soluções (Hub)</h3>
+        <p class="orig">Soluções LeadCapture para Crescer.png</p>
+        <div class="tags">
+          <span>Comercial</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="principal" data-cat="Serviço">
+      <div class="thumb-wrap">
+        <img src="../design/references/phase-3-services/service-qr-code-principal.png" alt="Soluções QR Code Modernas em Destaque.png" loading="lazy" />
+        <span class="badge-id">REF-45</span>
+        <span class="badge-status status-principal">principal</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 17 — Soluções QR Code</h3>
+        <p class="orig">Soluções QR Code Modernas em Destaque.png</p>
+        <div class="tags">
+          <span>Serviço</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="complementar" data-cat="Secção Adicional">
+      <div class="thumb-wrap">
+        <img src="../design/references/additional-sections/section-suporte-canais.png" alt="Suporte LeadCapture com Brilho Dourado-6.png" loading="lazy" />
+        <span class="badge-id">REF-46</span>
+        <span class="badge-status status-complementar">complementar</span>
+      </div>
+      <div class="meta">
+        <h3>Secção Suporte</h3>
+        <p class="orig">Suporte LeadCapture com Brilho Dourado-6.png</p>
+        <div class="tags">
+          <span>Secção Adicional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Alternativa">
+      <div class="thumb-wrap">
+        <img src="../design/references/alternative-designs/alt-suporte-atendimento-humano.png" alt="Suporte LeadCapture com Elegância Dourada-3.png" loading="lazy" />
+        <span class="badge-id">REF-47</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Secção Suporte (Humano)</h3>
+        <p class="orig">Suporte LeadCapture com Elegância Dourada-3.png</p>
+        <div class="tags">
+          <span>Alternativa</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Alternativa">
+      <div class="thumb-wrap">
+        <img src="../design/references/alternative-designs/alt-service-websites-hero-roxo.png" alt="Websites profissionais que geram resultados.png" loading="lazy" />
+        <span class="badge-id">REF-48</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Pág. 11 — Websites (Roxo)</h3>
+        <p class="orig">Websites profissionais que geram resultados.png</p>
+        <div class="tags">
+          <span>Alternativa</span>
+          <span>1672×941</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="complementar" data-cat="Secção Adicional">
+      <div class="thumb-wrap">
+        <img src="../design/references/additional-sections/section-area-cliente-principal.png" alt="Área de Cliente LeadCapture em Destaque-1.png" loading="lazy" />
+        <span class="badge-id">REF-49</span>
+        <span class="badge-status status-complementar">complementar</span>
+      </div>
+      <div class="meta">
+        <h3>Área de Cliente (Conceito)</h3>
+        <p class="orig">Área de Cliente LeadCapture em Destaque-1.png</p>
+        <div class="tags">
+          <span>Secção Adicional</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Alternativa">
+      <div class="thumb-wrap">
+        <img src="../design/references/alternative-designs/alt-area-cliente-loja-digital.png" alt="Área de Cliente LeadCapture em Destaque-2.png" loading="lazy" />
+        <span class="badge-id">REF-50</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Área de Cliente (Loja)</h3>
+        <p class="orig">Área de Cliente LeadCapture em Destaque-2.png</p>
+        <div class="tags">
+          <span>Alternativa</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+    <article class="card" data-status="alternativa" data-cat="Alternativa">
+      <div class="thumb-wrap">
+        <img src="../design/references/alternative-designs/alt-area-cliente-progresso.png" alt="Área de Cliente LeadCapture-2.png" loading="lazy" />
+        <span class="badge-id">REF-51</span>
+        <span class="badge-status status-alternativa">alternativa</span>
+      </div>
+      <div class="meta">
+        <h3>Área de Cliente (Progresso)</h3>
+        <p class="orig">Área de Cliente LeadCapture-2.png</p>
+        <div class="tags">
+          <span>Alternativa</span>
+          <span>1024×1536</span>
+        </div>
+      </div>
+    </article>
+  </main>
+  <script>
+    function filterCards(status, btn) {
+      document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".card").forEach(c => {
+        c.style.display = (status === "all" || c.dataset.status === status) ? "flex" : "none";
+      });
+    }
+  </script>
+</body>
+</html>

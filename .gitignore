@@ -1,0 +1,24 @@
+# Dependências e artefatos de build – nunca versionar
+node_modules/
+.next/
+dist/
+out/
+.vscode/
+*.log
+/.next
+/.vercel
+/.vercel/output
+# Pastas de assets / backups que são muito grandes
+design/references/
+public/images/production/
+referencias\ visuais/     # ← a barra invertida escapa o espaço no nome da pasta
+public/logos/            # opcional, caso queira excluir também as logos
+# Arquivos de compressão / backup
+*.tar.gz
+*.age
+*.sha256
+# Artefatos do macOS
+.DS_Store
+AppleDouble
+.Spotlight-V100
+.Trashes

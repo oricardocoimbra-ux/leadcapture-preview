@@ -1,0 +1,1029 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "name": "00-home",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 3363,
+          "h1": "Soluções digitais que atraem clientes, organizam o seu negócio e aumentam as vendas.",
+          "breadcrumb": false,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 4891,
+          "h1": "Soluções digitais que atraem clientes, organizam o seu negócio e aumentam as vendas.",
+          "breadcrumb": false,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 7148,
+          "h1": "Soluções digitais que atraem clientes, organizam o seu negócio e aumentam as vendas.",
+          "breadcrumb": false,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/solucoes",
+      "name": "01-solucoes",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 2530,
+          "h1": "Tudo o que a sua empresa precisa, num só parceiro.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 3422,
+          "h1": "Tudo o que a sua empresa precisa, num só parceiro.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 5256,
+          "h1": "Tudo o que a sua empresa precisa, num só parceiro.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/por-negocio",
+      "name": "02-por-negocio",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 2173,
+          "h1": "Tecnologia adaptada à realidade do seu negócio.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 2930,
+          "h1": "Tecnologia adaptada à realidade do seu negócio.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 4736,
+          "h1": "Tecnologia adaptada à realidade do seu negócio.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/demonstracoes",
+      "name": "03-demonstracoes",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 2466,
+          "h1": "Veja as nossas demonstrações e imagine o seu negócio online.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 3245,
+          "h1": "Veja as nossas demonstrações e imagine o seu negócio online.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 5441,
+          "h1": "Veja as nossas demonstrações e imagine o seu negócio online.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/precos",
+      "name": "04-precos",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 2241,
+          "h1": "Soluções à medida do seu negócio, com investimento transparente.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 3819,
+          "h1": "Soluções à medida do seu negócio, com investimento transparente.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 4872,
+          "h1": "Soluções à medida do seu negócio, com investimento transparente.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/recursos",
+      "name": "05-recursos",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 1812,
+          "h1": "Conhecimento e ferramentas práticas para fazer o seu negócio crescer.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 2485,
+          "h1": "Conhecimento e ferramentas práticas para fazer o seu negócio crescer.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 3760,
+          "h1": "Conhecimento e ferramentas práticas para fazer o seu negócio crescer.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/pedir-demonstracao",
+      "name": "06-pedir-demonstracao",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 1308,
+          "h1": "Pronto para dar o próximo passo?",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 2239,
+          "h1": "Pronto para dar o próximo passo?",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 3221,
+          "h1": "Pronto para dar o próximo passo?",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/por-negocio/imobiliario",
+      "name": "11-setor-imobiliario",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 3204,
+          "h1": "Mais contactos, mais visitas, mais negócios.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 4746,
+          "h1": "Mais contactos, mais visitas, mais negócios.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 7002,
+          "h1": "Mais contactos, mais visitas, mais negócios.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/por-negocio/beleza-estetica",
+      "name": "12-setor-beleza-estetica",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 3157,
+          "h1": "Mais marcações, mais clientes, mais receita.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 4678,
+          "h1": "Mais marcações, mais clientes, mais receita.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 7003,
+          "h1": "Mais marcações, mais clientes, mais receita.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/por-negocio/restauracao",
+      "name": "13-setor-restauracao",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 3180,
+          "h1": "Mais reservas, mais clientes, mais faturação.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 4654,
+          "h1": "Mais reservas, mais clientes, mais faturação.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 7007,
+          "h1": "Mais reservas, mais clientes, mais faturação.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/por-negocio/retalho-ecommerce",
+      "name": "14-setor-retalho-ecommerce",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 3184,
+          "h1": "Mais visibilidade, mais vendas, mais clientes.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 4682,
+          "h1": "Mais visibilidade, mais vendas, mais clientes.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 6987,
+          "h1": "Mais visibilidade, mais vendas, mais clientes.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/por-negocio/servicos-profissionais",
+      "name": "15-setor-servicos-profissionais",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 3204,
+          "h1": "Mais autoridade, mais oportunidades, mais clientes.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 4724,
+          "h1": "Mais autoridade, mais oportunidades, mais clientes.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 6989,
+          "h1": "Mais autoridade, mais oportunidades, mais clientes.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/por-negocio/saude-bem-estar",
+      "name": "16-setor-saude-bem-estar",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 3181,
+          "h1": "Mais consultas, mais pacientes, mais crescimento.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 4678,
+          "h1": "Mais consultas, mais pacientes, mais crescimento.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 6993,
+          "h1": "Mais consultas, mais pacientes, mais crescimento.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/solucoes/websites",
+      "name": "21-srv-websites",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 2343,
+          "h1": "Websites profissionais que geram resultados.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 3442,
+          "h1": "Websites profissionais que geram resultados.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 4730,
+          "h1": "Websites profissionais que geram resultados.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/solucoes/lojas-online",
+      "name": "22-srv-lojas-online",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 2343,
+          "h1": "Lojas Online com design premium.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 3442,
+          "h1": "Lojas Online com design premium.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 4668,
+          "h1": "Lojas Online com design premium.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/solucoes/crm-sistemas",
+      "name": "23-srv-crm-sistemas",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 2335,
+          "h1": "CRM & Sistemas",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 3452,
+          "h1": "CRM & Sistemas",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 4725,
+          "h1": "CRM & Sistemas",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/solucoes/marketing-digital",
+      "name": "24-srv-marketing-digital",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 2301,
+          "h1": "Marketing Digital",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 3378,
+          "h1": "Marketing Digital",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 4640,
+          "h1": "Marketing Digital",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/solucoes/automacao-ia",
+      "name": "25-srv-automacao-ia",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 2290,
+          "h1": "Automação & IA",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 3429,
+          "h1": "Automação & IA",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 4654,
+          "h1": "Automação & IA",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/solucoes/redes-sociais",
+      "name": "26-srv-redes-sociais",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 2290,
+          "h1": "Redes Sociais",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 3412,
+          "h1": "Redes Sociais",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 4650,
+          "h1": "Redes Sociais",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/solucoes/qr-code",
+      "name": "27-srv-qr-code",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 2290,
+          "h1": "Soluções QR Code",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 3389,
+          "h1": "Soluções QR Code",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 4690,
+          "h1": "Soluções QR Code",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/sobre-nos",
+      "name": "31-sobre-nos",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 2068,
+          "h1": "O parceiro 360° para o crescimento do seu negócio.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 2656,
+          "h1": "O parceiro 360° para o crescimento do seu negócio.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 3907,
+          "h1": "O parceiro 360° para o crescimento do seu negócio.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/portfolio",
+      "name": "32-portfolio",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 2434,
+          "h1": "Projetos reais, resultados concretos.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 3288,
+          "h1": "Projetos reais, resultados concretos.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 5341,
+          "h1": "Projetos reais, resultados concretos.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/casos-de-sucesso",
+      "name": "33-casos-de-sucesso",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 1828,
+          "h1": "Resultados reais em negócios reais.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 2758,
+          "h1": "Resultados reais em negócios reais.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 3719,
+          "h1": "Resultados reais em negócios reais.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/contactos",
+      "name": "34-contactos",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 1580,
+          "h1": "Fale connosco, estamos aqui para ajudar.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 2334,
+          "h1": "Fale connosco, estamos aqui para ajudar.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 3152,
+          "h1": "Fale connosco, estamos aqui para ajudar.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/faq",
+      "name": "35-faq",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 1899,
+          "h1": "Tem dúvidas? Nós respondemos.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 2765,
+          "h1": "Tem dúvidas? Nós respondemos.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 3627,
+          "h1": "Tem dúvidas? Nós respondemos.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    },
+    {
+      "path": "/pedir-orcamento",
+      "name": "36-pedir-orcamento",
+      "viewports": {
+        "desktop": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 1440,
+          "innerWidth": 1440,
+          "scrollHeight": 1785,
+          "h1": "Vamos criar a solução ideal para o seu negócio.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "tablet": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 768,
+          "innerWidth": 768,
+          "scrollHeight": 2649,
+          "h1": "Vamos criar a solução ideal para o seu negócio.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        "mobile": {
+          "status": 200,
+          "overflowX": false,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "scrollHeight": 3663,
+          "h1": "Vamos criar a solução ideal para o seu negócio.",
+          "breadcrumb": true,
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    }
+  ],
+  "navTests": {
+    "desktopDropdowns": {
+      "solucoesItems": 7,
+      "porNegocioItems": 6
+    },
+    "mobileDrawer": {
+      "drawerOpened": true,
+      "totalHeaderLinksWhenOpen": 28
+    }
+  },
+  "brokenLinks": []
+}
