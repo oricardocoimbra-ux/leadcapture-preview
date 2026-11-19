@@ -13,8 +13,10 @@ out/
 # Pastas de assets / backups que são muito grandes
 design/references/
 public/images/production/
-referencias\ visuais/     # ← a barra invertida escapa o espaço no nome da pasta
-public/logos/            # opcional, caso queira excluir também as logos
+# Referências visuais pesadas, não necessárias para o build do site
+referencias\ visuais\ /
+# Logos locais não usados pelo site
+public/logos/
 # Arquivos de compressão / backup
 *.tar.gz
 *.age
