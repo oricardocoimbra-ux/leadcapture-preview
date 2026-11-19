@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --lc-bg-primary: #050507;
+    --lc-bg-secondary: #0a0b0e;
+    --lc-bg-surface: #101218;
+    --lc-bg-elevated: #161922;
+    --lc-gold-primary: #f5b800;
+    --lc-gold-hover: #ffc929;
+    --lc-gold-muted: #d99b00;
+    --lc-border-gold: rgba(245, 184, 0, 0.24);
+    --lc-border-gold-strong: rgba(245, 184, 0, 0.55);
+    --lc-text-primary: #ffffff;
+    --lc-text-secondary: #d4d4d8;
+    --lc-text-muted: #9ca3af;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: #050507;
+    color: #ffffff;
+  }
+
+  body {
+    background-color: #050507;
+    color: #ffffff;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+/* LeadCapture Premium Utility Classes */
+@layer components {
+.lc-card {
+  background: linear-gradient(180deg, rgba(20, 22, 29, 0.94) 0%, rgba(11, 12, 16, 0.98) 100%);
+  border: 1px solid rgba(245, 184, 0, 0.22);
+  box-shadow: 0 0 0 1px rgba(245, 184, 0, 0.04), 0 18px 40px -18px rgba(0, 0, 0, 0.75);
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.lc-card:hover {
+  border-color: rgba(245, 184, 0, 0.52);
+  box-shadow: 0 0 28px -8px rgba(245, 184, 0, 0.2), 0 20px 44px -18px rgba(0, 0, 0, 0.85);
+}
+
+.lc-card-featured {
+  background: linear-gradient(180deg, rgba(28, 24, 14, 0.96) 0%, rgba(12, 12, 16, 0.99) 100%);
+  border: 1px solid rgba(245, 184, 0, 0.65);
+  box-shadow: 0 0 36px -10px rgba(245, 184, 0, 0.28);
+}
+
+.lc-btn-primary {
+  background: linear-gradient(135deg, #facc15 0%, #f5b800 55%, #e0a300 100%);
+  color: #090a0d;
+  font-weight: 700;
+  border-radius: 9999px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  box-shadow: 0 8px 24px -6px rgba(245, 184, 0, 0.42);
+}
+
+.lc-btn-primary:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px -6px rgba(245, 184, 0, 0.58);
+}
+
+.lc-btn-secondary {
+  background: rgba(16, 18, 24, 0.85);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 9999px;
+  border: 1px solid rgba(245, 184, 0, 0.42);
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.lc-btn-secondary:hover {
+  background: rgba(245, 184, 0, 0.12);
+  border-color: rgba(245, 184, 0, 0.8);
+  transform: translateY(-1px);
+}
+
+.lc-glow-ambient {
+  background: radial-gradient(circle at 50% 0%, rgba(245, 184, 0, 0.14) 0%, rgba(245, 184, 0, 0.03) 42%, transparent 72%);
+}
+
+.lc-input {
+  background: rgba(22, 25, 34, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lc-input:focus {
+  outline: none;
+  border-color: #f5b800;
+  box-shadow: 0 0 0 3px rgba(245, 184, 0, 0.15);
+}
+}

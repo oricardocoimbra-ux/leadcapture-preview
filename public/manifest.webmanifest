@@ -1,0 +1,21 @@
+{
+  "name": "LeadCapture",
+  "short_name": "LeadCapture",
+  "description": "Parceiro 360° em Soluções Digitais para Empresas",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050507",
+  "theme_color": "#F5B800",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
