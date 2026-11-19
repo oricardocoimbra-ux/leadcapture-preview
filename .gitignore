@@ -5,6 +5,8 @@ dist/
 out/
 .vscode/
 *.log
+/.env*
+!/.env.example
 /.next
 /.vercel
 /.vercel/output
