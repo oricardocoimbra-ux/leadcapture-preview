@@ -10,9 +10,8 @@ out/
 /.next
 /.vercel
 /.vercel/output
-# Pastas de assets / backups que são muito grandes
+# Pastas de referências/backups pesadas que não entram no build
 design/references/
-public/images/production/
 # Referências visuais pesadas, não necessárias para o build do site
 referencias\ visuais\ /
 # Logos locais não usados pelo site

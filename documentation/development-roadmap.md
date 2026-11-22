@@ -25,3 +25,35 @@
 - Ligar formulários (`/pedir-demonstracao`, `/pedir-orcamento`, `/contactos`) a CRM / Email / WhatsApp.
 - Implementar páginas legais (Política de Privacidade, Termos e Condições).
 - Avaliar fluxos de pagamento/contrato após validação comercial e fiscal.
+
+### Fase 5 — E-commerce de Serviços, Cross-sell e Placas QR Personalizadas (Fase Posterior — Não Ativar Pagamentos Reais Ainda)
+
+> [!IMPORTANT]
+> **Validação Comercial Obrigatória Antes de Ativar Compras Online:**
+> Antes de ativar qualquer checkout real, é obrigatório validar formalmente: **preços finais**, **regime e taxa de IVA aplicável**, **contratos e termos de prestação de serviços** e **quais produtos do catálogo são elegíveis para compra direta online** vs. orçamento. Até lá, todos os pagamentos e integrações permanecem estritamente em **modo de teste** (sem chaves Stripe live, sem encomendas reais de impressão e sem publicação em Production).
+
+- **Compra direta nas páginas de serviço e no catálogo de preços (`/precos` e `/solucoes/[slug]`):**
+  - Permitir adicionar e contratar produtos/serviços elegíveis diretamente a partir do catálogo existente (`src/data/catalog.ts`), sem inventar preços nem condições.
+- **Distinção clara entre compra online e orçamento à medida:**
+  - Separar explicitamente produtos de **preço fechado** (elegíveis para compra direta online) de serviços complexos ou à medida que exigem **pedido de orçamento** (`/pedir-orcamento`).
+- **Sugestões de complementos (Cross-sell) no produto e no carrinho (`/carrinho`):**
+  - Exemplos a avaliar na arquitetura comercial:
+    - *Website* + domínio / email profissional / manutenção;
+    - *Restaurante* + menu digital / gestão / placas QR;
+    - *Marketing* + website / produção de conteúdo.
+- **Fluxo de compra de Placas QR Personalizadas (`/solucoes/qr-code`):**
+  - Configurador estruturado com: tipo de QR e destino (ex.: Menu Digital, Avaliações Google, Cartão Digital, Website), quantidade, formato/material, personalização de design, cálculo de portes e prazo estimado de produção/entrega.
+- **Integração com API de impressão (Prodigi — avaliação faseada obrigatória antes do lançamento):**
+  - Ver especificação completa e requisitos obrigatórios pré-lançamento em [`documentation/pre-launch-requirements.md`](./pre-launch-requirements.md): sandbox primeiro, validação de SKUs em Portugal, custos/margens, amostra física de leitura QR, credenciais exclusivamente no servidor e aprovação explícita do proprietário antes de ativar encomendas reais.
+
+### Fase 6 — Serviços de Vídeo/Imagem Imobiliária, Prova Social (Marcas) e Reativação de Carteira (A Planear Após a Ronda Visual)
+
+> [!IMPORTANT]
+> Todos os requisitos detalhados, restrições legais/regulatórias (RGPD, direitos de imagem/satélite e enquadramento do Banco de Portugal para intermediação/consultoria de crédito habitação) e hipóteses de preço **não aprovadas** estão preservados em [`documentation/pre-launch-requirements.md`](./pre-launch-requirements.md).
+>
+> **Regras estritas de preservação:**
+> - **Não publicar** preços não validados nem casos/logótipos (incluindo *Century 21*) sem autorização expressa da marca e do cliente.
+> - **Não utilizar** dados reais de clientes nem imagens de satélite/Google Earth Studio sem direitos comerciais confirmados.
+> - **Concluir primeiro a ronda visual atual** antes de desenhar e implementar esta fase separadamente.
+
+

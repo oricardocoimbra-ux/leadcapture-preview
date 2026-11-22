@@ -3,6 +3,19 @@ export interface SectorServiceItem {
   description: string;
   iconName: string;
   relatedServiceSlug: string;
+  image?: string;
+  imageAlt?: string;
+  visualType?: "ads" | "reviews" | "integrations";
+  overlayLabel?: string;
+}
+
+export interface SectorPhonePreview {
+  brandLabel: string;
+  headline: string;
+  ctaLabel: string;
+  image: string;
+  imageAlt: string;
+  checklist: string[];
 }
 
 export interface SectorItem {
@@ -14,6 +27,9 @@ export interface SectorItem {
   heroTitle: string;
   heroHighlight: string;
   heroDescription: string;
+  heroImage?: string;
+  heroImageAlt?: string;
+  phonePreview?: SectorPhonePreview;
   iconName: string;
   status: "active" | "expansion";
   servicesTitle: string;
@@ -22,6 +38,8 @@ export interface SectorItem {
   packageBadge: string;
   packageTitle: string;
   packageBenefits: string[];
+  packageImage?: string;
+  packageImageAlt?: string;
   recommendedServiceSlugs: string[];
 }
 
@@ -36,6 +54,23 @@ export const SECTORS: SectorItem[] = [
     heroHighlight: "mais negócios.",
     heroDescription:
       "Websites imobiliários, gestão de leads e automação pensados para agências e consultores que querem captar, organizar e converter mais clientes.",
+    heroImage: "/images/production/imobiliario/hero-imobiliario.jpg",
+    heroImageAlt:
+      "Moradia moderna de luxo em Portugal ao pôr do sol com piscina infinita e iluminação arquitetónica dourada",
+    phonePreview: {
+      brandLabel: "Imobiliário 360°",
+      headline: "Encontre o imóvel ideal e agende visita",
+      ctaLabel: "Agendar Visita",
+      image: "/images/production/imobiliario/smartphone-imobiliario.jpg",
+      imageAlt:
+        "Sala luminosa de moradia moderna de luxo com vista para piscina e jardim ao pôr do sol",
+      checklist: [
+        "Pesquisa Rápida de Imóveis",
+        "Agendamento Online de Visitas",
+        "Qualificação Automática de Leads",
+        "Acompanhamento no CRM",
+      ],
+    },
     iconName: "Home",
     status: "active",
     servicesTitle: "Serviços para Agentes e Agências Imobiliárias",
@@ -47,48 +82,65 @@ export const SECTORS: SectorItem[] = [
         description: "Site moderno, rápido e estruturado para apresentar imóveis e gerar pedidos de contacto.",
         iconName: "Monitor",
         relatedServiceSlug: "websites",
+        image: "/images/production/reutilizaveis/website-portatil.jpg",
+        imageAlt: "Portátil preto sobre secretária moderna com iluminação dourada para website imobiliário",
+        overlayLabel: "Catálogo de Imóveis · Pedidos de Visita",
       },
       {
         title: "CRM de Leads",
         description: "Organize contactos de compradores e proprietários, oportunidades e histórico comercial.",
         iconName: "Layers",
         relatedServiceSlug: "crm-sistemas",
+        image: "/images/production/saude-bem-estar/servico-crm-gestao.jpg",
+        imageAlt: "Monitor executivo com gráficos dourados de pipeline comercial e acompanhamento de leads",
+        overlayLabel: "Pipeline · Compradores & Proprietários",
       },
       {
         title: "Campanhas de Leads",
         description: "Estratégias de captação no Google e Meta para atrair potenciais compradores e vendedores.",
         iconName: "Megaphone",
         relatedServiceSlug: "marketing-digital",
+        visualType: "ads",
       },
       {
         title: "Agendamento de Visitas",
         description: "Marcação online simplificada e integrada com a sua agenda comercial.",
         iconName: "Calendar",
         relatedServiceSlug: "automacao-ia",
+        image: "/images/production/saude-bem-estar/servico-agendamento-online.jpg",
+        imageAlt: "Tablet digital em secretária escura para marcação online de visitas",
+        overlayLabel: "Visita Confirmada · Agenda Sincronizada",
       },
       {
         title: "Automação & Follow-up",
         description: "Respostas automáticas iniciais, nutrição de leads e lembretes de acompanhamento.",
         iconName: "Mail",
         relatedServiceSlug: "automacao-ia",
+        image: "/images/production/saude-bem-estar/servico-automacao-lembrete.jpg",
+        imageAlt: "Smartphone preto com acabamento dourado para respostas automáticas e follow-up de leads",
+        overlayLabel: "Follow-up automático · Resposta imediata",
       },
       {
         title: "Conteúdo Imobiliário",
         description: "Estrutura preparada para fotografia, vídeo e apresentações profissionais de imóveis.",
         iconName: "Camera",
         relatedServiceSlug: "redes-sociais",
+        image: "/images/production/imobiliario/conteudo-imobiliario.jpg",
+        imageAlt: "Produção audiovisual profissional com câmara em tripé no interior de moradia moderna ao pôr do sol",
       },
       {
         title: "Relatórios & Indicadores",
         description: "Acompanhamento de contactos, visitas e desempenho das campanhas num único painel.",
         iconName: "BarChart3",
         relatedServiceSlug: "crm-sistemas",
+        visualType: "reviews",
       },
       {
         title: "Integrações Essenciais",
         description: "Ligação a WhatsApp, email, calendário e ferramentas do seu dia a dia.",
         iconName: "Plug",
         relatedServiceSlug: "crm-sistemas",
+        visualType: "integrations",
       },
     ],
     packageBadge: "PACOTE IMOBILIÁRIO 360°",
@@ -99,6 +151,8 @@ export const SECTORS: SectorItem[] = [
       "Mais contactos qualificados",
       "Acompanhamento dedicado da equipa",
     ],
+    packageImage: "/images/production/imobiliario/pacote-imobiliario.jpg",
+    packageImageAlt: "Escritório executivo imobiliário luminoso ao pôr do sol com portátil e vista panorâmica",
     recommendedServiceSlugs: ["websites", "crm-sistemas", "marketing-digital", "automacao-ia"],
   },
   {
@@ -111,6 +165,23 @@ export const SECTORS: SectorItem[] = [
     heroHighlight: "mais receita.",
     heroDescription:
       "Websites, agendamento online, campanhas e automação pensados para salões de beleza, clínicas de estética e barbearias.",
+    heroImage: "/images/production/beleza-estetica/hero-beleza.jpg",
+    heroImageAlt:
+      "Interior luminoso de salão de beleza e estética moderno com espelhos ovais iluminados a dourado e balcão em mármore",
+    phonePreview: {
+      brandLabel: "Beleza & Estética",
+      headline: "Marque o seu tratamento online",
+      ctaLabel: "Agendar Agora",
+      image: "/images/production/beleza-estetica/smartphone-beleza.jpg",
+      imageAlt:
+        "Especialista de estética a realizar tratamento facial relaxante em clínica moderna com iluminação quente",
+      checklist: [
+        "Estética Avançada",
+        "Tratamentos Faciais",
+        "Laser & Depilação",
+        "Corpo & Bem-Estar",
+      ],
+    },
     iconName: "Sparkles",
     status: "active",
     servicesTitle: "Serviços para Salões, Clínicas e Estúdios de Beleza",
@@ -122,48 +193,65 @@ export const SECTORS: SectorItem[] = [
         description: "Site elegante, adaptado à identidade da sua marca e focado em gerar marcações.",
         iconName: "Monitor",
         relatedServiceSlug: "websites",
+        image: "/images/production/reutilizaveis/website-portatil.jpg",
+        imageAlt: "Portátil preto moderno sobre secretária com iluminação dourada para website de salão de beleza",
+        overlayLabel: "Site de Beleza · Serviços & Marcações",
       },
       {
         title: "Agendamento Online",
         description: "Marcação de tratamentos e serviços com confirmação automática e lembretes.",
         iconName: "Calendar",
         relatedServiceSlug: "automacao-ia",
+        image: "/images/production/saude-bem-estar/servico-agendamento-online.jpg",
+        imageAlt: "Tablet digital em balcão escuro para gestão de marcações de estética 24/7",
+        overlayLabel: "Marcação 24/7 · Lembrete Automático",
       },
       {
         title: "Campanhas de Captação",
         description: "Mais visibilidade local e novos pedidos através de campanhas segmentadas.",
         iconName: "Megaphone",
         relatedServiceSlug: "marketing-digital",
+        visualType: "ads",
       },
       {
         title: "Gestão de Clientes (CRM)",
         description: "Histórico de serviços, preferências e ações de fidelização organizadas.",
         iconName: "Users",
         relatedServiceSlug: "crm-sistemas",
+        image: "/images/production/saude-bem-estar/servico-crm-gestao.jpg",
+        imageAlt: "Monitor executivo com indicadores dourados de gestão de clientes e fidelização",
+        overlayLabel: "Histórico de Tratamentos · Fidelização",
       },
       {
         title: "Automação & Comunicação",
         description: "Confirmações, lembretes de marcação e mensagens de acompanhamento.",
         iconName: "MessageSquare",
         relatedServiceSlug: "automacao-ia",
+        image: "/images/production/saude-bem-estar/servico-automacao-lembrete.jpg",
+        imageAlt: "Smartphone preto com friso dourado para confirmações e lembretes automáticos de marcação",
+        overlayLabel: "A sua marcação foi confirmada ✓",
       },
       {
         title: "Conteúdo & Redes Sociais",
         description: "Planeamento e gestão de presença digital para fortalecer a sua marca.",
         iconName: "Camera",
         relatedServiceSlug: "redes-sociais",
+        image: "/images/production/beleza-estetica/conteudo-beleza.jpg",
+        imageAlt: "Gravação de vídeo e reels com anel de luz dourado e smartphone num estúdio de beleza",
       },
       {
         title: "Relatórios & Resultados",
         description: "Visibilidade sobre marcações, retorno de campanhas e evolução do negócio.",
         iconName: "BarChart3",
         relatedServiceSlug: "crm-sistemas",
+        visualType: "reviews",
       },
       {
         title: "Integrações Essenciais",
         description: "Integração com WhatsApp, calendário, email e ferramentas de gestão.",
         iconName: "Plug",
         relatedServiceSlug: "crm-sistemas",
+        visualType: "integrations",
       },
     ],
     packageBadge: "PACOTE BELEZA 360°",
@@ -174,6 +262,8 @@ export const SECTORS: SectorItem[] = [
       "Mais marcações e clientes recorrentes",
       "Apoio contínuo da nossa equipa",
     ],
+    packageImage: "/images/production/beleza-estetica/pacote-beleza.jpg",
+    packageImageAlt: "Balcão de clínica de estética em mármore com portátil, toalhas enroladas, cosméticos e flores",
     recommendedServiceSlugs: ["websites", "redes-sociais", "automacao-ia", "marketing-digital"],
   },
   {
@@ -186,6 +276,23 @@ export const SECTORS: SectorItem[] = [
     heroHighlight: "mais faturação.",
     heroDescription:
       "Websites, menus digitais por QR Code, reservas online, encomendas e marketing local para restaurantes, cafés e bares.",
+    heroImage: "/images/production/restauracao/hero-restauracao.jpg",
+    heroImageAlt:
+      "Interior acolhedor e moderno de restaurante português com candeeiros dourados, mesas de madeira e cozinha aberta",
+    phonePreview: {
+      brandLabel: "Restauração 360°",
+      headline: "Descubra o nosso menu digital",
+      ctaLabel: "Ver Menu Digital",
+      image: "/images/production/restauracao/smartphone-restauracao.jpg",
+      imageAlt:
+        "Prato gourmet de peixe grelhado com legumes em prato preto artesanal sob iluminação quente de restaurante",
+      checklist: [
+        "Menu Digital por QR Code",
+        "Reservar Mesa Online",
+        "Encomendar Takeaway",
+        "Avaliar no Google",
+      ],
+    },
     iconName: "Utensils",
     status: "active",
     servicesTitle: "Serviços para Restaurantes, Cafés, Bares e Takeaway",
@@ -197,48 +304,64 @@ export const SECTORS: SectorItem[] = [
         description: "Site moderno e rápido pensado para gerar reservas de mesa e pedidos diretos.",
         iconName: "Monitor",
         relatedServiceSlug: "websites",
+        image: "/images/production/reutilizaveis/website-portatil.jpg",
+        imageAlt: "Portátil preto em secretária escura com luz dourada para website de restaurante",
+        overlayLabel: "Site do Restaurante · Reservas & Ementa",
       },
       {
         title: "Menu Digital (QR Code)",
         description: "Ementa sempre atualizada e acessível por QR Code, sem necessidade de reimpressões.",
         iconName: "QrCode",
         relatedServiceSlug: "qr-code",
+        image: "/images/production/restauracao/pacote-restauracao-qr.jpg",
+        imageAlt: "Placas acrílicas preto e dourado com QR Code sobre mesa de restaurante",
+        overlayLabel: "Ementa Digital · Atualização Instantânea",
       },
       {
         title: "Reservas Online",
         description: "Gestão simples de reservas com confirmação automática e lembretes.",
         iconName: "Calendar",
         relatedServiceSlug: "automacao-ia",
+        image: "/images/production/saude-bem-estar/servico-agendamento-online.jpg",
+        imageAlt: "Tablet digital para gestão de reservas de mesa e confirmação automática",
+        overlayLabel: "Reserva de Mesa · Confirmação Automática",
       },
       {
         title: "Encomendas & Takeaway",
         description: "Canal digital próprio para pedidos de takeaway ou entrega.",
         iconName: "ShoppingBag",
         relatedServiceSlug: "lojas-online",
+        image: "/images/production/restauracao/encomendas-takeaway.jpg",
+        imageAlt: "Saco de takeaway preto premium com ícone dourado sobre balcão de madeira em restaurante",
       },
       {
         title: "Avaliações Google",
         description: "Soluções QR Code diretas para facilitar avaliações e reforçar a reputação local.",
         iconName: "Star",
         relatedServiceSlug: "qr-code",
+        visualType: "reviews",
       },
       {
         title: "Conteúdo & Redes Sociais",
         description: "Gestão estratégica para dar mais visibilidade aos seus pratos e espaço.",
         iconName: "Camera",
         relatedServiceSlug: "redes-sociais",
+        image: "/images/production/restauracao/conteudo-restauracao.jpg",
+        imageAlt: "Sessão fotográfica gastronómica com câmara profissional em tripé dentro de restaurante",
       },
       {
         title: "Campanhas de Captação",
         description: "Anúncios locais para atrair novos clientes, reservas de grupo e pedidos.",
         iconName: "Megaphone",
         relatedServiceSlug: "marketing-digital",
+        visualType: "ads",
       },
       {
         title: "Integrações Essenciais",
         description: "Ligação a Google, WhatsApp e ferramentas utilizadas no dia a dia do espaço.",
         iconName: "Plug",
         relatedServiceSlug: "crm-sistemas",
+        visualType: "integrations",
       },
     ],
     packageBadge: "PLAQUINHAS QR CODE & ECOSSISTEMA 360°",
@@ -249,6 +372,8 @@ export const SECTORS: SectorItem[] = [
       "Reservas online organizadas",
       "Design personalizado com a sua marca",
     ],
+    packageImage: "/images/production/restauracao/pacote-restauracao-qr.jpg",
+    packageImageAlt: "Placas QR Code personalizadas em preto e dourado sobre mesa de restaurante iluminada",
     recommendedServiceSlugs: ["qr-code", "websites", "redes-sociais", "marketing-digital"],
   },
   {
@@ -411,6 +536,23 @@ export const SECTORS: SectorItem[] = [
     heroHighlight: "mais crescimento.",
     heroDescription:
       "Websites, agendamento online, gestão de pacientes e marketing digital para clínicas, consultórios e profissionais de saúde e bem-estar.",
+    heroImage: "/images/production/saude-bem-estar/hero-clinica.jpg",
+    heroImageAlt:
+      "Receção de clínica moderna de saúde e bem-estar com balcão em mármore, madeira ripada e iluminação dourada acolhedora",
+    phonePreview: {
+      brandLabel: "Saúde & Bem-Estar",
+      headline: "Agende a sua consulta online",
+      ctaLabel: "Marcar Consulta",
+      image: "/images/production/saude-bem-estar/profissional-saude-smartphone.jpg",
+      imageAlt:
+        "Profissional de saúde sorridente em consultório clínico moderno com iluminação quente",
+      checklist: [
+        "Consultas Presenciais",
+        "Teleconsulta",
+        "Acompanhamento",
+        "Planos Personalizados",
+      ],
+    },
     iconName: "HeartPulse",
     status: "active",
     servicesTitle: "Serviços para Clínicas e Profissionais de Saúde",
@@ -422,48 +564,70 @@ export const SECTORS: SectorItem[] = [
         description: "Site moderno, claro e adaptado às especialidades e equipa da sua clínica.",
         iconName: "Monitor",
         relatedServiceSlug: "websites",
+        image: "/images/production/saude-bem-estar/servico-website-clinica.jpg",
+        imageAlt:
+          "Portátil moderno sobre secretária escura em consultório clínico com iluminação dourada",
+        overlayLabel: "Site Clínico · Especialidades & Marcações",
       },
       {
         title: "Agendamento Online",
         description: "Marcação de consultas 24/7 com confirmações e lembretes automáticos.",
         iconName: "Calendar",
         relatedServiceSlug: "automacao-ia",
+        image: "/images/production/saude-bem-estar/servico-agendamento-online.jpg",
+        imageAlt:
+          "Tablet digital sobre balcão escuro de receção clínica para gestão de marcações online",
+        overlayLabel: "Agenda Online · Confirmação Automática",
       },
       {
         title: "Campanhas de Captação",
         description: "Divulgação ética e segmentada no Google e Meta para atrair novos pacientes.",
         iconName: "Megaphone",
         relatedServiceSlug: "marketing-digital",
+        visualType: "ads",
       },
       {
         title: "Gestão de Pacientes (CRM)",
         description: "Organização de contactos, histórico de marcações e acompanhamento.",
         iconName: "Users",
         relatedServiceSlug: "crm-sistemas",
+        image: "/images/production/saude-bem-estar/servico-crm-gestao.jpg",
+        imageAlt:
+          "Monitor em secretária executiva de clínica com gráficos dourados de acompanhamento de pacientes",
+        overlayLabel: "Ficha de Paciente · Histórico & Consultas",
       },
       {
         title: "Automação & Comunicação",
         description: "Confirmações, lembretes de consulta e campanhas de acompanhamento.",
         iconName: "Bell",
         relatedServiceSlug: "automacao-ia",
+        image: "/images/production/saude-bem-estar/servico-automacao-lembrete.jpg",
+        imageAlt:
+          "Smartphone preto com acabamento dourado sobre secretária de clínica para lembretes automáticos",
+        overlayLabel: "Lembrete de consulta — Confirma a sua presença?",
       },
       {
         title: "Conteúdo Profissional",
         description: "Comunicação educativa e presença nas redes sociais para gerar confiança.",
         iconName: "Camera",
         relatedServiceSlug: "redes-sociais",
+        image: "/images/production/saude-bem-estar/servico-conteudo-profissional.jpg",
+        imageAlt:
+          "Gravação de vídeo profissional de médica em consultório clínico moderno com iluminação de estúdio",
       },
       {
         title: "Avaliações Google",
         description: "Fortaleça a reputação online da clínica e facilite feedback de pacientes.",
         iconName: "Star",
         relatedServiceSlug: "qr-code",
+        visualType: "reviews",
       },
       {
         title: "Integrações Essenciais",
         description: "Ligação a WhatsApp, calendário, email e ferramentas clínicas compatíveis.",
         iconName: "Plug",
         relatedServiceSlug: "crm-sistemas",
+        visualType: "integrations",
       },
     ],
     packageBadge: "PACOTE SAÚDE 360°",
@@ -474,6 +638,9 @@ export const SECTORS: SectorItem[] = [
       "Gestão organizada de pacientes",
       "Apoio especializado contínuo",
     ],
+    packageImage: "/images/production/saude-bem-estar/pacote-ambiente-clinica.jpg",
+    packageImageAlt:
+      "Sala de tratamento e consulta moderna e relaxante com marquesa, toalhas enroladas e iluminação quente",
     recommendedServiceSlugs: ["websites", "crm-sistemas", "automacao-ia", "marketing-digital"],
   },
 ];

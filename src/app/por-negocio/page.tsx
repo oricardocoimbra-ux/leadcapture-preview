@@ -36,20 +36,33 @@ export default function PorNegocioPage() {
             <Link
               key={sector.slug}
               href={`/por-negocio/${sector.slug}`}
-              className="lc-card rounded-2xl p-6 flex flex-col justify-between group"
+              className="lc-card rounded-2xl overflow-hidden flex flex-col justify-between group"
             >
               <div>
-                <div className="w-12 h-12 rounded-xl bg-[#161922] border border-amber-500/25 flex items-center justify-center mb-5">
-                  <DynamicIcon name={sector.iconName} className="w-6 h-6 text-[#F5B800]" />
+                {sector.heroImage && (
+                  <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#0a0b0e]">
+                    <img
+                      src={sector.heroImage}
+                      alt={sector.heroImageAlt ?? sector.name}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#101218] via-transparent to-transparent" />
+                  </div>
+                )}
+                <div className="p-6 pb-2">
+                  <div className="w-12 h-12 rounded-xl bg-[#161922] border border-amber-500/25 flex items-center justify-center mb-4">
+                    <DynamicIcon name={sector.iconName} className="w-6 h-6 text-[#F5B800]" />
+                  </div>
+                  <h2 className="text-xl font-bold text-white group-hover:text-[#F5B800]">
+                    {sector.name}
+                  </h2>
+                  <p className="text-sm text-zinc-400 mt-2 leading-relaxed">
+                    {sector.heroDescription}
+                  </p>
                 </div>
-                <h2 className="text-xl font-bold text-white group-hover:text-[#F5B800]">
-                  {sector.name}
-                </h2>
-                <p className="text-sm text-zinc-400 mt-2 leading-relaxed">
-                  {sector.heroDescription}
-                </p>
               </div>
-              <div className="mt-6 flex items-center justify-between text-sm font-semibold text-[#F5B800]">
+              <div className="px-6 pb-6 pt-4 flex items-center justify-between text-sm font-semibold text-[#F5B800]">
                 <span>Explorar {sector.name}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>

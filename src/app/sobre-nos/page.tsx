@@ -62,19 +62,30 @@ export default function SobreNosPage() {
         </div>
 
         {/* Missão */}
-        <div className="lc-card-featured rounded-3xl p-8 sm:p-10 mb-14">
-          <span className="text-xs font-bold tracking-widest uppercase text-[#F5B800]">
-            A Nossa Missão
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white mt-2 max-w-2xl">
-            Transformar negócios com tecnologia,{" "}
-            <span className="text-[#F5B800]">estratégia e resultados reais.</span>
-          </h2>
-          <p className="text-zinc-300 mt-4 max-w-3xl leading-relaxed">
-            Queremos simplificar o digital para que os empresários possam focar-se no que realmente
-            importa: os seus clientes, a qualidade do seu serviço e o crescimento consistente da
-            sua empresa.
-          </p>
+        <div className="relative lc-card-featured rounded-3xl overflow-hidden p-8 sm:p-10 mb-14">
+          <div className="pointer-events-none absolute inset-0 z-0">
+            <img
+              src="/images/production/home/hero-leadcapture.jpg"
+              alt="Equipa LeadCapture em reunião estratégica num estúdio moderno com iluminação dourada"
+              loading="lazy"
+              className="h-full w-full object-cover object-center lg:object-right opacity-80"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0b0c10]/92 via-[#0b0c10]/84 to-[#0b0c10]/72 lg:bg-gradient-to-r lg:from-[#0b0c10]/96 lg:via-[#0b0c10]/80 lg:to-[#0b0c10]/25" />
+          </div>
+          <div className="relative z-10">
+            <span className="text-xs font-bold tracking-widest uppercase text-[#F5B800]">
+              A Nossa Missão
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white mt-2 max-w-2xl">
+              Transformar negócios com tecnologia,{" "}
+              <span className="text-[#F5B800]">estratégia e resultados reais.</span>
+            </h2>
+            <p className="text-zinc-200 mt-4 max-w-2xl leading-relaxed">
+              Queremos simplificar o digital para que os empresários possam focar-se no que realmente
+              importa: os seus clientes, a qualidade do seu serviço e o crescimento consistente da
+              sua empresa.
+            </p>
+          </div>
         </div>
 
         {/* O que nos diferencia */}

@@ -13,8 +13,20 @@ export function ServicePageTemplate({ service }: { service: ServiceItem }) {
   return (
     <div className="relative">
       {/* Hero */}
-      <section className="pt-10 pb-16 px-4 sm:px-6 lg:px-8 lc-glow-ambient">
-        <div className="max-w-7xl mx-auto">
+      <section className="relative overflow-hidden pt-10 pb-16 px-4 sm:px-6 lg:px-8 lc-glow-ambient">
+        {service.heroImage && (
+          <div className="pointer-events-none absolute inset-0 z-0">
+            <img
+              src={service.heroImage}
+              alt={service.heroImageAlt ?? service.name}
+              className="h-full w-full object-cover object-center opacity-85"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#050507]/96 via-[#050507]/78 to-[#050507]/35" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#050507] via-transparent to-[#050507]/30" />
+          </div>
+        )}
+
+        <div className="relative z-10 max-w-7xl mx-auto">
           <Breadcrumbs
             items={[
               { label: "Soluções", href: "/solucoes" },
@@ -32,13 +44,13 @@ export function ServicePageTemplate({ service }: { service: ServiceItem }) {
                 {service.heroTitle}{" "}
                 <span className="text-[#F5B800]">{service.heroHighlight}</span>
               </h1>
-              <p className="text-base sm:text-lg text-zinc-300 max-w-2xl leading-relaxed">
+              <p className="text-base sm:text-lg text-zinc-200 max-w-2xl leading-relaxed">
                 {service.heroDescription}
               </p>
 
               <ul className="space-y-2.5 pt-1">
                 {service.checklist.map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-sm sm:text-base text-zinc-200">
+                  <li key={item} className="flex items-center gap-3 text-sm sm:text-base text-zinc-100">
                     <CheckCircle2 className="w-5 h-5 text-[#F5B800] shrink-0" />
                     <span>{item}</span>
                   </li>
@@ -55,7 +67,7 @@ export function ServicePageTemplate({ service }: { service: ServiceItem }) {
                 </Link>
                 <Link
                   href="/precos"
-                  className="lc-btn-secondary px-6 py-3.5 inline-flex items-center justify-center gap-2 text-sm sm:text-base"
+                  className="lc-btn-secondary px-6 py-3.5 inline-flex items-center justify-center gap-2 text-sm sm:text-base backdrop-blur-sm"
                 >
                   <Play className="w-4 h-4 text-[#F5B800]" />
                   Ver Planos e Preços
@@ -65,31 +77,43 @@ export function ServicePageTemplate({ service }: { service: ServiceItem }) {
 
             {/* Service Highlights Card */}
             <div className="lg:col-span-5">
-              <div className="lc-card-featured rounded-3xl p-6 sm:p-7 space-y-5">
-                <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                  <span className="text-sm font-bold text-white">{service.shortName}</span>
-                  <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500/15 text-[#F5B800] font-semibold">
-                    LeadCapture
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  {service.highlights.map((hl) => (
-                    <div
-                      key={hl.label}
-                      className="p-4 rounded-2xl bg-[#0a0b0e] border border-amber-500/20 space-y-2"
-                    >
-                      <DynamicIcon name={hl.iconName} className="w-5 h-5 text-[#F5B800]" />
-                      <p className="text-xs sm:text-sm font-semibold text-white">{hl.label}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
-                  <Link href={`/pedir-orcamento?servico=${service.slug}`} className="text-[#F5B800] font-semibold hover:underline">
-                    Pedir orçamento à medida →
-                  </Link>
-                  <Link href="/demonstracoes" className="text-zinc-300 hover:text-white">
-                    Demonstrações →
-                  </Link>
+              <div className="lc-card-featured rounded-3xl overflow-hidden bg-[#0c0d12]/90 backdrop-blur-md">
+                {service.heroImage && (
+                  <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-white/10">
+                    <img
+                      src={service.heroImage}
+                      alt={service.heroImageAlt ?? service.name}
+                      className="h-full w-full object-cover"
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0c0d12] via-transparent to-transparent" />
+                  </div>
+                )}
+                <div className="p-6 sm:p-7 space-y-5">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                    <span className="text-sm font-bold text-white">{service.shortName}</span>
+                    <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500/15 text-[#F5B800] font-semibold">
+                      LeadCapture
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {service.highlights.map((hl) => (
+                      <div
+                        key={hl.label}
+                        className="p-4 rounded-2xl bg-[#0a0b0e] border border-amber-500/20 space-y-2"
+                      >
+                        <DynamicIcon name={hl.iconName} className="w-5 h-5 text-[#F5B800]" />
+                        <p className="text-xs sm:text-sm font-semibold text-white">{hl.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
+                    <Link href={`/pedir-orcamento?servico=${service.slug}`} className="text-[#F5B800] font-semibold hover:underline">
+                      Pedir orçamento à medida →
+                    </Link>
+                    <Link href="/demonstracoes" className="text-zinc-300 hover:text-white">
+                      Demonstrações →
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

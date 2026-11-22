@@ -11,17 +11,27 @@ export default function HomePage() {
     <div className="relative">
       {/* Hero Section */}
       <section className="relative pt-16 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden lc-glow-ambient">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-12 items-center">
+        <div className="pointer-events-none absolute inset-0 z-0">
+          <img
+            src="/images/production/home/hero-leadcapture.jpg"
+            alt="Equipa LeadCapture em estúdio moderno com iluminação dourada a planear soluções digitais"
+            className="h-full w-full object-cover object-center opacity-100"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#050507]/85 via-[#050507]/45 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050507]/90 via-transparent to-[#050507]/15" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-7 space-y-6">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-xs font-bold tracking-widest uppercase text-[#F5B800]">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/35 text-xs font-bold tracking-widest uppercase text-[#F5B800] backdrop-blur-sm">
               <Sparkles className="w-3.5 h-3.5" />
               Parceiro 360° para Empresas
             </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08]">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08] drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)]">
               Soluções digitais que atraem clientes, organizam o seu negócio e{" "}
               <span className="text-[#F5B800]">aumentam as vendas.</span>
             </h1>
-            <p className="text-base sm:text-lg text-zinc-300 max-w-2xl leading-relaxed">
+            <p className="text-base sm:text-lg text-zinc-100 max-w-2xl leading-relaxed drop-shadow-[0_1px_8px_rgba(0,0,0,0.75)]">
               Websites, lojas online, CRM, marketing digital e automação com Inteligência Artificial
               para empresas que querem crescer com tecnologia, estratégia e acompanhamento próximo.
             </p>
@@ -36,32 +46,32 @@ export default function HomePage() {
               </Link>
               <Link
                 href="/demonstracoes"
-                className="lc-btn-secondary px-7 py-4 inline-flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="lc-btn-secondary px-7 py-4 inline-flex items-center justify-center gap-2 text-sm sm:text-base backdrop-blur-sm"
               >
                 <Play className="w-4 h-4 text-[#F5B800]" />
                 Explorar Demonstrações
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-white/10">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-white/15">
               <div className="flex items-center gap-3">
                 <Zap className="w-5 h-5 text-[#F5B800] shrink-0" />
-                <span className="text-sm text-zinc-300">Implementação ágil e estruturada</span>
+                <span className="text-sm text-zinc-100 drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">Implementação ágil e estruturada</span>
               </div>
               <div className="flex items-center gap-3">
                 <ShieldCheck className="w-5 h-5 text-[#F5B800] shrink-0" />
-                <span className="text-sm text-zinc-300">Soluções à medida do seu setor</span>
+                <span className="text-sm text-zinc-100 drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">Soluções à medida do seu setor</span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="w-5 h-5 text-[#F5B800] shrink-0" />
-                <span className="text-sm text-zinc-300">Apoio contínuo e especializado</span>
+                <span className="text-sm text-zinc-100 drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">Apoio contínuo e especializado</span>
               </div>
             </div>
           </div>
 
-          {/* Interactive Preview Card (Replacing static reference image) */}
+          {/* Interactive Ecosystem Card */}
           <div className="lg:col-span-5">
-            <div className="lc-card-featured rounded-3xl p-6 sm:p-7 space-y-5 relative">
+            <div className="lc-card-featured rounded-3xl p-6 sm:p-7 space-y-5 relative bg-[#0c0d12]/78 backdrop-blur-md">
               <div className="flex items-center justify-between border-b border-white/10 pb-4">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-wider text-[#F5B800]">
@@ -86,21 +96,21 @@ export default function HomePage() {
                   <Link
                     key={row.href}
                     href={row.href}
-                    className="flex items-center justify-between p-3.5 rounded-xl bg-[#0a0b0e]/90 border border-white/10 hover:border-amber-500/45 transition-colors group"
+                    className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-[#0a0b0e]/90 border border-white/10 hover:border-amber-500/45 transition-colors group"
                   >
                     <span className="text-sm font-semibold text-white group-hover:text-[#F5B800]">
                       {row.label}
                     </span>
-                    <span className="text-xs px-2.5 py-1 rounded-full bg-[#161922] text-zinc-300 group-hover:text-[#F5B800]">
+                    <span className="text-xs px-2.5 py-1 rounded-full bg-[#161922] text-zinc-300 group-hover:text-[#F5B800] whitespace-nowrap shrink-0">
                       {row.tag} →
                     </span>
                   </Link>
                 ))}
               </div>
 
-              <div className="pt-2 flex items-center justify-between text-xs text-zinc-400">
-                <span>Produção fotográfica dedicada em preparação</span>
-                <Link href="/sobre-nos" className="text-[#F5B800] font-semibold hover:underline">
+              <div className="pt-2 flex items-center justify-between gap-3 text-xs text-zinc-300">
+                <span>Soluções modulares para empresas em Portugal</span>
+                <Link href="/sobre-nos" className="text-[#F5B800] font-semibold hover:underline whitespace-nowrap shrink-0">
                   Sobre nós →
                 </Link>
               </div>
@@ -130,18 +140,31 @@ export default function HomePage() {
               <Link
                 key={sector.slug}
                 href={`/por-negocio/${sector.slug}`}
-                className="lc-card rounded-2xl p-6 flex flex-col justify-between group"
+                className="lc-card rounded-2xl overflow-hidden flex flex-col justify-between group"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-[#161922] border border-amber-500/25 flex items-center justify-center mb-5">
-                    <DynamicIcon name={sector.iconName} className="w-6 h-6 text-[#F5B800]" />
+                  {sector.heroImage && (
+                    <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#0a0b0e]">
+                      <img
+                        src={sector.heroImage}
+                        alt={sector.heroImageAlt ?? sector.name}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#101218] via-transparent to-transparent" />
+                    </div>
+                  )}
+                  <div className="p-6 pb-2">
+                    <div className="w-12 h-12 rounded-xl bg-[#161922] border border-amber-500/25 flex items-center justify-center mb-4">
+                      <DynamicIcon name={sector.iconName} className="w-6 h-6 text-[#F5B800]" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white group-hover:text-[#F5B800] transition-colors">
+                      {sector.name}
+                    </h3>
+                    <p className="text-sm text-zinc-400 mt-2">{sector.shortSubtitle}</p>
                   </div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-[#F5B800] transition-colors">
-                    {sector.name}
-                  </h3>
-                  <p className="text-sm text-zinc-400 mt-2">{sector.shortSubtitle}</p>
                 </div>
-                <div className="mt-6 flex items-center justify-between text-sm font-semibold text-[#F5B800]">
+                <div className="px-6 pb-6 pt-4 flex items-center justify-between text-sm font-semibold text-[#F5B800]">
                   <span>Ver soluções do setor</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </div>

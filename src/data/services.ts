@@ -13,6 +13,8 @@ export interface ServiceItem {
   heroTitle: string;
   heroHighlight: string;
   heroDescription: string;
+  heroImage?: string;
+  heroImageAlt?: string;
   checklist: string[];
   primaryCtaLabel: string;
   iconName: string;
@@ -34,6 +36,9 @@ export const SERVICES: ServiceItem[] = [
     heroHighlight: "geram resultados.",
     heroDescription:
       "Presença digital sólida que transmite credibilidade, atrai clientes e transforma visitantes em oportunidades reais de negócio.",
+    heroImage: "/images/production/reutilizaveis/website-portatil.jpg",
+    heroImageAlt:
+      "Portátil preto elegante sobre secretária de madeira com iluminação dourada a apresentar websites modernos",
     checklist: [
       "Websites institucionais e corporativos",
       "Landing pages de alta conversão",
@@ -138,6 +143,9 @@ export const SERVICES: ServiceItem[] = [
     heroHighlight: "Sistemas",
     heroDescription:
       "Centralize contactos, oportunidades de vendas, clientes e processos do seu negócio num único sistema organizado.",
+    heroImage: "/images/production/saude-bem-estar/servico-crm-gestao.jpg",
+    heroImageAlt:
+      "Monitor executivo em secretária escura com gráficos dourados de pipeline comercial e CRM",
     checklist: [
       "Gestão de contactos e clientes",
       "Pipeline comercial e oportunidades",
@@ -190,6 +198,9 @@ export const SERVICES: ServiceItem[] = [
     heroHighlight: "Digital",
     heroDescription:
       "Estratégia, campanhas e análise de performance para atrair mais clientes, gerar contactos qualificados e apoiar o crescimento do negócio.",
+    heroImage: "/images/production/home/hero-leadcapture.jpg",
+    heroImageAlt:
+      "Equipa de estratégia digital em estúdio moderno com iluminação dourada a analisar campanhas",
     checklist: [
       "Estratégia personalizada por setor de negócio",
       "Campanhas no Google e Meta (Instagram e Facebook)",
@@ -241,6 +252,9 @@ export const SERVICES: ServiceItem[] = [
     heroHighlight: "& IA",
     heroDescription:
       "Automatize tarefas repetitivas, ganhe tempo e conte com Inteligência Artificial para atender clientes e escalar processos.",
+    heroImage: "/images/production/saude-bem-estar/servico-automacao-lembrete.jpg",
+    heroImageAlt:
+      "Smartphone preto com acabamento dourado sobre pedra escura a representar automação inteligente 24/7",
     checklist: [
       "Automação de processos e tarefas",
       "Atendimento inteligente com assistentes virtuais",
