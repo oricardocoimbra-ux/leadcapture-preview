@@ -14,6 +14,7 @@ import {
 import { SECTORS } from "@/data/sectors";
 import { SERVICES } from "@/data/services";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { TurnstileWidget, isTurnstileClientEnabled } from "@/components/forms/TurnstileWidget";
 import { isValidEmail, isValidPhone } from "@/lib/form-validation";
 
 type DemoErrors = Partial<Record<"name" | "email" | "phone", string>>;
@@ -28,6 +29,8 @@ export default function PedirDemonstracaoPage() {
   const [service, setService] = useState("");
   const [notes, setNotes] = useState("");
   const [website, setWebsite] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileReset, setTurnstileReset] = useState(0);
   const [errors, setErrors] = useState<DemoErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [sentSuccess, setSentSuccess] = useState(false);
@@ -70,6 +73,11 @@ export default function PedirDemonstracaoPage() {
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
+    if (isTurnstileClientEnabled && !turnstileToken) {
+      setServerError("Complete a verificação anti-spam antes de enviar.");
+      return;
+    }
+
     setSubmitting(true);
     try {
       const res = await fetch("/api/forms/submit", {
@@ -86,6 +94,7 @@ export default function PedirDemonstracaoPage() {
           message: notes,
           website,
           formStartedAt: formStartedAtRef.current,
+          turnstileToken: turnstileToken || undefined,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -114,6 +123,10 @@ export default function PedirDemonstracaoPage() {
       setServerError("Erro de comunicação com o servidor. O pedido não foi enviado.");
     } finally {
       setSubmitting(false);
+      if (isTurnstileClientEnabled) {
+        setTurnstileToken("");
+        setTurnstileReset((n) => n + 1);
+      }
     }
   };
 
@@ -373,6 +386,12 @@ export default function PedirDemonstracaoPage() {
                     onChange={(e) => setWebsite(e.target.value)}
                   />
                 </div>
+
+                <TurnstileWidget
+                  onVerify={setTurnstileToken}
+                  onExpireOrError={() => setTurnstileToken("")}
+                  resetSignal={turnstileReset}
+                />
 
                 {sentSuccess && (
                   <div

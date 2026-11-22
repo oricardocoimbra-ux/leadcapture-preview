@@ -6,6 +6,7 @@ import { AlertTriangle, CheckCircle2, Clock, Loader2, Lock } from "lucide-react"
 import { SECTORS } from "@/data/sectors";
 import { SERVICES } from "@/data/services";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { TurnstileWidget, isTurnstileClientEnabled } from "@/components/forms/TurnstileWidget";
 import { isValidEmail, isValidPhone } from "@/lib/form-validation";
 
 type QuoteErrors = Partial<
@@ -23,6 +24,8 @@ export default function PedirOrcamentoPage() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [description, setDescription] = useState("");
   const [website, setWebsite] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileReset, setTurnstileReset] = useState(0);
   const [errors, setErrors] = useState<QuoteErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [sentSuccess, setSentSuccess] = useState(false);
@@ -77,6 +80,11 @@ export default function PedirOrcamentoPage() {
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
+    if (isTurnstileClientEnabled && !turnstileToken) {
+      setServerError("Complete a verificação anti-spam antes de enviar.");
+      return;
+    }
+
     setSubmitting(true);
     try {
       const res = await fetch("/api/forms/submit", {
@@ -94,6 +102,7 @@ export default function PedirOrcamentoPage() {
           message: description,
           website,
           formStartedAt: formStartedAtRef.current,
+          turnstileToken: turnstileToken || undefined,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -130,6 +139,10 @@ export default function PedirOrcamentoPage() {
       setServerError("Erro de comunicação com o servidor. O pedido não foi enviado.");
     } finally {
       setSubmitting(false);
+      if (isTurnstileClientEnabled) {
+        setTurnstileToken("");
+        setTurnstileReset((n) => n + 1);
+      }
     }
   };
 
@@ -412,6 +425,12 @@ export default function PedirOrcamentoPage() {
                     onChange={(e) => setWebsite(e.target.value)}
                   />
                 </div>
+
+                <TurnstileWidget
+                  onVerify={setTurnstileToken}
+                  onExpireOrError={() => setTurnstileToken("")}
+                  resetSignal={turnstileReset}
+                />
 
                 {sentSuccess && (
                   <div

@@ -128,6 +128,81 @@ async function verifyTurnstileIfConfigured(token: string, clientIp: string): Pro
   }
 }
 
+function getTrustedClientIp(request: NextRequest): string {
+  // Prefer platform-set headers (not client-spoofable on Vercel Edge) before x-forwarded-for.
+  const vercelIp = request.headers.get("x-vercel-forwarded-for");
+  if (vercelIp) {
+    const first = vercelIp.split(",")[0]?.trim();
+    if (first) return first;
+  }
+
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+
+  const cfIp = request.headers.get("cf-connecting-ip")?.trim();
+  if (cfIp) return cfIp;
+
+  // Fallback: rightmost entry in x-forwarded-for (appended by the closest trusted proxy).
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  if (forwardedFor) {
+    const parts = forwardedFor
+      .split(",")
+      .map((part) => part.trim())
+      .filter(Boolean);
+    if (parts.length > 0) return parts[parts.length - 1];
+  }
+
+  return "unknown";
+}
+
+async function readBodyWithByteLimit(
+  request: NextRequest,
+  maxBytes: number
+): Promise<{ ok: true; text: string } | { ok: false; status: 400 | 413; error: string }> {
+  // Fast-reject declared oversized payloads before reading any stream bytes.
+  const declaredLength = request.headers.get("content-length");
+  if (declaredLength !== null) {
+    const parsedLength = Number(declaredLength);
+    if (Number.isFinite(parsedLength) && parsedLength > maxBytes) {
+      return { ok: false, status: 413, error: "Pedido demasiado grande." };
+    }
+  }
+
+  if (!request.body) {
+    return { ok: false, status: 400, error: "Corpo do pedido em falta." };
+  }
+
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (!value) continue;
+
+      totalBytes += value.byteLength;
+      if (totalBytes > maxBytes) {
+        await reader.cancel().catch(() => undefined);
+        return { ok: false, status: 413, error: "Pedido demasiado grande." };
+      }
+      chunks.push(value);
+    }
+  } catch {
+    return { ok: false, status: 400, error: "Não foi possível ler o pedido." };
+  }
+
+  const merged = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    merged.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+
+  return { ok: true, text: new TextDecoder("utf-8").decode(merged) };
+}
+
 export async function POST(request: NextRequest) {
   // 1. Same-origin / CSRF protection against cross-site automated POSTs.
   if (!isSameOriginRequest(request)) {
@@ -137,7 +212,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // 2. Require JSON content type and enforce strict payload size cap.
+  // 2. Require JSON content type and enforce strict 12 KB cap BEFORE buffering full body.
   const contentType = request.headers.get("content-type") || "";
   if (!contentType.toLowerCase().includes("application/json")) {
     return NextResponse.json(
@@ -146,26 +221,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let rawBody: string;
-  try {
-    rawBody = await request.text();
-  } catch {
-    return NextResponse.json(
-      { ok: false, error: "Não foi possível ler o pedido." },
-      { status: 400 }
-    );
-  }
-
-  if (Buffer.byteLength(rawBody, "utf8") > MAX_BODY_BYTES) {
-    return NextResponse.json(
-      { ok: false, error: "Pedido demasiado grande." },
-      { status: 413 }
-    );
+  const bodyResult = await readBodyWithByteLimit(request, MAX_BODY_BYTES);
+  if (!bodyResult.ok) {
+    return NextResponse.json({ ok: false, error: bodyResult.error }, { status: bodyResult.status });
   }
 
   let body: FormSubmitPayload;
   try {
-    body = JSON.parse(rawBody) as FormSubmitPayload;
+    body = JSON.parse(bodyResult.text) as FormSubmitPayload;
   } catch {
     return NextResponse.json(
       { ok: false, error: "Pedido inválido (JSON malformado)." },
@@ -187,9 +250,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, ignored: true }, { status: 200 });
   }
 
-  // 5. Provisional in-memory rate limiting per client IP (bounded Map, serverless-provisional).
-  const forwardedFor = request.headers.get("x-forwarded-for") || "";
-  const clientIp = forwardedFor.split(",")[0]?.trim() || "unknown";
+  // 5. Provisional in-memory rate limiting per trusted client IP (bounded Map, serverless-provisional).
+  const clientIp = getTrustedClientIp(request);
   if (!checkProvisionalRateLimit(clientIp)) {
     return NextResponse.json(
       {

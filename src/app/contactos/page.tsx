@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { CONTACT_INFO } from "@/data/site-data";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { TurnstileWidget, isTurnstileClientEnabled } from "@/components/forms/TurnstileWidget";
 import { isValidEmail, isValidPhone } from "@/lib/form-validation";
 
 type ContactErrors = Partial<Record<"name" | "email" | "phone" | "message", string>>;
@@ -26,6 +27,8 @@ export default function ContactosPage() {
   const [subject, setSubject] = useState("demo");
   const [message, setMessage] = useState("");
   const [website, setWebsite] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileReset, setTurnstileReset] = useState(0);
   const [errors, setErrors] = useState<ContactErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [sentSuccess, setSentSuccess] = useState(false);
@@ -59,6 +62,11 @@ export default function ContactosPage() {
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
+    if (isTurnstileClientEnabled && !turnstileToken) {
+      setServerError("Complete a verificação anti-spam antes de enviar.");
+      return;
+    }
+
     setSubmitting(true);
     try {
       const res = await fetch("/api/forms/submit", {
@@ -73,6 +81,7 @@ export default function ContactosPage() {
           message,
           website,
           formStartedAt: formStartedAtRef.current,
+          turnstileToken: turnstileToken || undefined,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -100,6 +109,10 @@ export default function ContactosPage() {
       setServerError("Erro de comunicação com o servidor. O pedido não foi enviado.");
     } finally {
       setSubmitting(false);
+      if (isTurnstileClientEnabled) {
+        setTurnstileToken("");
+        setTurnstileReset((n) => n + 1);
+      }
     }
   };
 
@@ -335,6 +348,12 @@ export default function ContactosPage() {
                     onChange={(e) => setWebsite(e.target.value)}
                   />
                 </div>
+
+                <TurnstileWidget
+                  onVerify={setTurnstileToken}
+                  onExpireOrError={() => setTurnstileToken("")}
+                  resetSignal={turnstileReset}
+                />
 
                 {sentSuccess && (
                   <div
