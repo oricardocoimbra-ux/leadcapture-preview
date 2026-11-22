@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
+  CheckCircle2,
   Loader2,
   Mail,
   MapPin,
@@ -23,9 +24,12 @@ export default function ContactosPage() {
   const [phone, setPhone] = useState("");
   const [subject, setSubject] = useState("demo");
   const [message, setMessage] = useState("");
+  const [website, setWebsite] = useState("");
   const [errors, setErrors] = useState<ContactErrors>({});
   const [submitting, setSubmitting] = useState(false);
-  const [notConnectedNotice, setNotConnectedNotice] = useState(false);
+  const [sentSuccess, setSentSuccess] = useState(false);
+  const [disabledNotice, setDisabledNotice] = useState<string | null>(null);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const validate = (): ContactErrors => {
     const next: ContactErrors = {};
@@ -44,18 +48,57 @@ export default function ContactosPage() {
     return next;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setNotConnectedNotice(false);
+    setSentSuccess(false);
+    setDisabledNotice(null);
+    setServerError(null);
+
     const nextErrors = validate();
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
     setSubmitting(true);
-    window.setTimeout(() => {
+    try {
+      const res = await fetch("/api/forms/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "contactos",
+          name,
+          email,
+          phone,
+          subject,
+          message,
+          website,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data?.ok === true && data?.sent === true) {
+        setSentSuccess(true);
+        setName("");
+        setEmail("");
+        setPhone("");
+        setMessage("");
+      } else if (res.status === 503 || data?.configured === false) {
+        setDisabledNotice(
+          data?.error ||
+            "O envio de formulários encontra-se desativado neste ambiente. O pedido não foi enviado nem guardado."
+        );
+      } else {
+        if (data?.fieldErrors && typeof data.fieldErrors === "object") {
+          setErrors(data.fieldErrors as ContactErrors);
+        }
+        setServerError(
+          data?.error || "Não foi possível enviar a mensagem. Tente novamente mais tarde."
+        );
+      }
+    } catch {
+      setServerError("Erro de comunicação com o servidor. O pedido não foi enviado.");
+    } finally {
       setSubmitting(false);
-      setNotConnectedNotice(true);
-    }, 300);
+    }
   };
 
   return (
@@ -96,7 +139,12 @@ export default function ContactosPage() {
               </div>
               <div>
                 <h2 className="text-base font-bold text-white">Email</h2>
-                <p className="text-sm text-zinc-400 mt-0.5">{CONTACT_INFO.email}</p>
+                <a
+                  href={`mailto:${CONTACT_INFO.email}`}
+                  className="mt-0.5 block text-sm text-zinc-400 transition-colors hover:text-white"
+                >
+                  {CONTACT_INFO.email}
+                </a>
               </div>
             </div>
 
@@ -273,7 +321,37 @@ export default function ContactosPage() {
                   )}
                 </div>
 
-                {notConnectedNotice && (
+                <div className="hidden" aria-hidden="true">
+                  <label htmlFor="contact-website">Website</label>
+                  <input
+                    id="contact-website"
+                    name="website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                  />
+                </div>
+
+                {sentSuccess && (
+                  <div
+                    role="status"
+                    aria-live="polite"
+                    className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/45 flex items-start gap-3 text-left"
+                  >
+                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                    <div className="space-y-1 text-xs sm:text-sm">
+                      <p className="font-bold text-white">Mensagem enviada com sucesso</p>
+                      <p className="text-zinc-300 leading-relaxed">
+                        O servidor confirmou o envio do seu pedido para a equipa LeadCapture.
+                        Responderemos para o endereço de email indicado.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {disabledNotice && (
                   <div
                     role="status"
                     aria-live="polite"
@@ -282,14 +360,19 @@ export default function ContactosPage() {
                     <AlertTriangle className="w-5 h-5 text-[#F5B800] shrink-0 mt-0.5" />
                     <div className="space-y-1 text-xs sm:text-sm">
                       <p className="font-bold text-white">
-                        A sua mensagem ainda não foi enviada
+                        A sua mensagem não foi enviada nem guardada
                       </p>
-                      <p className="text-zinc-300 leading-relaxed">
-                        Os dados preenchidos foram validados corretamente, mas este ambiente de
-                        pré-visualização ainda não tem integração ativa de email ou CRM. Nenhum dado
-                        foi transmitido ou guardado.
-                      </p>
+                      <p className="text-zinc-300 leading-relaxed">{disabledNotice}</p>
                     </div>
+                  </div>
+                )}
+
+                {serverError && (
+                  <div
+                    role="alert"
+                    className="p-4 rounded-2xl bg-red-500/10 border border-red-500/45 text-xs sm:text-sm text-red-300 font-medium"
+                  >
+                    {serverError}
                   </div>
                 )}
 
@@ -301,7 +384,7 @@ export default function ContactosPage() {
                   {submitting ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      A validar dados...
+                      A enviar...
                     </>
                   ) : (
                     "Enviar Mensagem"
