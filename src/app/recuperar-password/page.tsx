@@ -2,11 +2,33 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Info } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react";
 import { LeadCaptureLogo } from "@/components/ui/LeadCaptureLogo";
+import { isValidEmail } from "@/lib/form-validation";
 
 export default function RecuperarPasswordPage() {
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setNotice(null);
+
+    if (!isValidEmail(email)) {
+      setError("Introduza um endereço de email válido.");
+      return;
+    }
+    setError(null);
+    setSubmitting(true);
+    window.setTimeout(() => {
+      setSubmitting(false);
+      setNotice(
+        "Nenhum email foi enviado: a recuperação de palavra-passe (Supabase Auth) ainda não está ligada neste ambiente de pré-visualização."
+      );
+    }, 250);
+  };
 
   return (
     <div className="py-14 px-4 sm:px-6 lg:px-8 lc-glow-ambient">
@@ -23,28 +45,60 @@ export default function RecuperarPasswordPage() {
           </p>
         </div>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            setNotice(
-              "Fluxo preparado para Supabase Auth: enviará email com link temporário de recuperação."
-            );
-          }}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit} noValidate aria-busy={submitting} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-zinc-300 mb-1.5">Email *</label>
-            <input type="email" required placeholder="email@empresa.pt" className="lc-input text-sm" />
+            <label
+              htmlFor="recover-email"
+              className="block text-xs font-semibold text-zinc-200 mb-1.5"
+            >
+              Email <span className="text-[#F5B800]">*</span>
+            </label>
+            <input
+              id="recover-email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) setError(null);
+              }}
+              aria-invalid={Boolean(error)}
+              aria-describedby={error ? "recover-email-error" : undefined}
+              placeholder="email@empresa.pt"
+              className={`lc-input text-sm ${error ? "border-red-500/70" : ""}`}
+            />
+            {error && (
+              <p id="recover-email-error" role="alert" className="mt-1.5 text-xs text-red-400">
+                {error}
+              </p>
+            )}
           </div>
 
-          <button type="submit" className="lc-btn-primary w-full py-3.5 text-sm">
-            Enviar Link de Recuperação
+          <button
+            type="submit"
+            disabled={submitting}
+            className="lc-btn-primary w-full py-3.5 text-sm inline-flex items-center justify-center gap-2 disabled:opacity-60"
+          >
+            {submitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                A validar...
+              </>
+            ) : (
+              "Enviar Link de Recuperação"
+            )}
           </button>
         </form>
 
         {notice && (
-          <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/35 flex items-start gap-2.5 text-xs text-zinc-200">
-            <Info className="w-4 h-4 text-[#F5B800] shrink-0 mt-0.5" />
+          <div
+            role="status"
+            aria-live="polite"
+            className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/40 flex items-start gap-2.5 text-xs text-zinc-200"
+          >
+            <AlertTriangle className="w-4 h-4 text-[#F5B800] shrink-0 mt-0.5" />
             <span>{notice}</span>
           </div>
         )}

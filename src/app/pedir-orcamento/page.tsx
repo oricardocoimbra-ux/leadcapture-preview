@@ -1,14 +1,81 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, Clock, Lock } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Clock, Loader2, Lock } from "lucide-react";
 import { SECTORS } from "@/data/sectors";
 import { SERVICES } from "@/data/services";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { isValidEmail, isValidPhone } from "@/lib/form-validation";
+
+type QuoteErrors = Partial<
+  Record<"name" | "email" | "phone" | "sector" | "description", string>
+>;
 
 export default function PedirOrcamentoPage() {
-  const [submitted, setSubmitted] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [company, setCompany] = useState("");
+  const [sector, setSector] = useState("");
+  const [projectType, setProjectType] = useState("novo");
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [description, setDescription] = useState("");
+  const [errors, setErrors] = useState<QuoteErrors>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [notConnectedNotice, setNotConnectedNotice] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const setorParam = params.get("setor");
+    const servicoParam = params.get("servico");
+    if (setorParam && SECTORS.some((s) => s.slug === setorParam)) {
+      setSector(setorParam);
+    }
+    if (servicoParam && SERVICES.some((s) => s.slug === servicoParam)) {
+      setSelectedServices((prev) => (prev.includes(servicoParam) ? prev : [...prev, servicoParam]));
+    }
+  }, []);
+
+  const toggleService = (slug: string) => {
+    setSelectedServices((prev) =>
+      prev.includes(slug) ? prev.filter((item) => item !== slug) : [...prev, slug]
+    );
+  };
+
+  const validate = (): QuoteErrors => {
+    const next: QuoteErrors = {};
+    if (name.trim().length < 2) {
+      next.name = "Indique o seu nome (mínimo 2 caracteres).";
+    }
+    if (!isValidEmail(email)) {
+      next.email = "Introduza um endereço de email válido (ex.: nome@empresa.pt).";
+    }
+    if (!isValidPhone(phone)) {
+      next.phone = "Introduza um número de telefone ou WhatsApp válido (mínimo 9 dígitos).";
+    }
+    if (!sector) {
+      next.sector = "Selecione o setor de atividade do seu negócio.";
+    }
+    if (description.trim().length < 15) {
+      next.description = "Descreva o seu projeto ou objetivos (mínimo 15 caracteres).";
+    }
+    return next;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setNotConnectedNotice(false);
+    const nextErrors = validate();
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
+    setSubmitting(true);
+    window.setTimeout(() => {
+      setSubmitting(false);
+      setNotConnectedNotice(true);
+    }, 300);
+  };
 
   return (
     <div className="pt-10 pb-20 px-4 sm:px-6 lg:px-8 lc-glow-ambient">
@@ -17,7 +84,7 @@ export default function PedirOrcamentoPage() {
 
         <div className="max-w-3xl space-y-4 mb-10">
           <span className="text-xs font-bold tracking-widest uppercase text-[#F5B800]">
-            Pedir Orçamento — Página 23
+            Pedir Orçamento
           </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-white">
             Vamos criar a solução ideal{" "}
@@ -35,128 +102,291 @@ export default function PedirOrcamentoPage() {
             <div className="lc-card-featured rounded-3xl p-6 sm:p-8">
               <h2 className="text-2xl font-extrabold text-white mb-2">Preencha o formulário</h2>
               <p className="text-sm text-zinc-400 mb-6">
-                Selecione os serviços de interesse e descreva brevemente o seu projeto.
+                Selecione os serviços de interesse e descreva brevemente o seu projeto. Os campos
+                marcados com <span className="text-[#F5B800]">*</span> são obrigatórios.
               </p>
 
-              {submitted ? (
-                <div className="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/40 text-center space-y-3">
-                  <CheckCircle2 className="w-10 h-10 text-[#F5B800] mx-auto" />
-                  <h3 className="text-lg font-bold text-white">Pedido de orçamento registado (protótipo)</h3>
-                  <p className="text-sm text-zinc-300">
-                    A integração comercial de envio será ligada na próxima fase.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setSubmitted(false)}
-                    className="lc-btn-secondary px-5 py-2 text-xs"
-                  >
-                    Novo pedido
-                  </button>
-                </div>
-              ) : (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setSubmitted(true);
-                  }}
-                  className="space-y-4"
-                >
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                        Nome *
-                      </label>
-                      <input type="text" required placeholder="O seu nome" className="lc-input text-sm" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                        Email *
-                      </label>
-                      <input type="email" required placeholder="email@empresa.pt" className="lc-input text-sm" />
-                    </div>
-                  </div>
-
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                        Telefone / WhatsApp *
-                      </label>
-                      <input type="tel" required placeholder="+351 ..." className="lc-input text-sm" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                        Nome da Empresa
-                      </label>
-                      <input type="text" placeholder="Empresa" className="lc-input text-sm" />
-                    </div>
-                  </div>
-
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                        Setor de Atividade *
-                      </label>
-                      <select required className="lc-input text-sm">
-                        <option value="">Selecione um setor</option>
-                        {SECTORS.map((s) => (
-                          <option key={s.slug} value={s.slug}>
-                            {s.name}
-                          </option>
-                        ))}
-                        <option value="outro">Outro setor</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                        Tipo de Projeto *
-                      </label>
-                      <select required className="lc-input text-sm">
-                        <option value="novo">Novo Projeto</option>
-                        <option value="redesign">Melhoria / Redesign</option>
-                        <option value="sistema-360">Ecossistema 360° Completo</option>
-                      </select>
-                    </div>
-                  </div>
-
+              <form onSubmit={handleSubmit} noValidate aria-busy={submitting} className="space-y-4">
+                <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <span className="block text-xs font-semibold text-zinc-300 mb-2">
-                      Serviços de interesse (pode escolher vários)
-                    </span>
-                    <div className="grid sm:grid-cols-2 gap-2.5">
-                      {SERVICES.map((srv) => (
-                        <label
-                          key={srv.slug}
-                          className="flex items-center gap-2.5 p-3 rounded-xl bg-[#0a0b0e] border border-white/10 text-xs text-zinc-200 cursor-pointer hover:border-amber-500/40"
-                        >
-                          <input type="checkbox" className="accent-[#F5B800]" />
-                          <span>{srv.name}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                      Descreva o seu projeto ou objetivos *
+                    <label
+                      htmlFor="quote-name"
+                      className="block text-xs font-semibold text-zinc-200 mb-1.5"
+                    >
+                      Nome Completo <span className="text-[#F5B800]">*</span>
                     </label>
-                    <textarea
-                      rows={4}
+                    <input
+                      id="quote-name"
+                      name="name"
+                      type="text"
+                      autoComplete="name"
                       required
-                      placeholder="Explique o que pretende alcançar..."
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                        if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }));
+                      }}
+                      aria-invalid={Boolean(errors.name)}
+                      aria-describedby={errors.name ? "quote-name-error" : undefined}
+                      placeholder="O seu nome"
+                      className={`lc-input text-sm ${errors.name ? "border-red-500/70" : ""}`}
+                    />
+                    {errors.name && (
+                      <p id="quote-name-error" role="alert" className="mt-1.5 text-xs text-red-400">
+                        {errors.name}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="quote-email"
+                      className="block text-xs font-semibold text-zinc-200 mb-1.5"
+                    >
+                      Email Profissional <span className="text-[#F5B800]">*</span>
+                    </label>
+                    <input
+                      id="quote-email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      required
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
+                      }}
+                      aria-invalid={Boolean(errors.email)}
+                      aria-describedby={errors.email ? "quote-email-error" : undefined}
+                      placeholder="email@empresa.pt"
+                      className={`lc-input text-sm ${errors.email ? "border-red-500/70" : ""}`}
+                    />
+                    {errors.email && (
+                      <p id="quote-email-error" role="alert" className="mt-1.5 text-xs text-red-400">
+                        {errors.email}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      htmlFor="quote-phone"
+                      className="block text-xs font-semibold text-zinc-200 mb-1.5"
+                    >
+                      Telefone / WhatsApp <span className="text-[#F5B800]">*</span>
+                    </label>
+                    <input
+                      id="quote-phone"
+                      name="phone"
+                      type="tel"
+                      autoComplete="tel"
+                      required
+                      value={phone}
+                      onChange={(e) => {
+                        setPhone(e.target.value);
+                        if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }));
+                      }}
+                      aria-invalid={Boolean(errors.phone)}
+                      aria-describedby={errors.phone ? "quote-phone-error" : undefined}
+                      placeholder="+351 9XX XXX XXX"
+                      className={`lc-input text-sm ${errors.phone ? "border-red-500/70" : ""}`}
+                    />
+                    {errors.phone && (
+                      <p id="quote-phone-error" role="alert" className="mt-1.5 text-xs text-red-400">
+                        {errors.phone}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="quote-company"
+                      className="block text-xs font-semibold text-zinc-200 mb-1.5"
+                    >
+                      Nome da Empresa <span className="text-zinc-500">(opcional)</span>
+                    </label>
+                    <input
+                      id="quote-company"
+                      name="organization"
+                      type="text"
+                      autoComplete="organization"
+                      value={company}
+                      onChange={(e) => setCompany(e.target.value)}
+                      placeholder="Nome da empresa"
                       className="lc-input text-sm"
                     />
                   </div>
+                </div>
 
-                  <button type="submit" className="lc-btn-primary w-full py-3.5 text-sm sm:text-base">
-                    Pedir Orçamento
-                  </button>
-
-                  <div className="flex items-center gap-2 text-xs text-zinc-400">
-                    <Lock className="w-4 h-4 text-[#F5B800] shrink-0" />
-                    <span>Os seus dados estão protegidos e serão utilizados apenas para responder ao seu pedido.</span>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      htmlFor="quote-sector"
+                      className="block text-xs font-semibold text-zinc-200 mb-1.5"
+                    >
+                      Setor de Atividade <span className="text-[#F5B800]">*</span>
+                    </label>
+                    <select
+                      id="quote-sector"
+                      name="sector"
+                      required
+                      value={sector}
+                      onChange={(e) => {
+                        setSector(e.target.value);
+                        if (errors.sector) setErrors((prev) => ({ ...prev, sector: undefined }));
+                      }}
+                      aria-invalid={Boolean(errors.sector)}
+                      aria-describedby={errors.sector ? "quote-sector-error" : undefined}
+                      className={`lc-input text-sm ${errors.sector ? "border-red-500/70" : ""}`}
+                    >
+                      <option value="">Selecione um setor</option>
+                      {SECTORS.map((s) => (
+                        <option key={s.slug} value={s.slug}>
+                          {s.name}
+                        </option>
+                      ))}
+                      <option value="outro">Outro setor</option>
+                    </select>
+                    {errors.sector && (
+                      <p id="quote-sector-error" role="alert" className="mt-1.5 text-xs text-red-400">
+                        {errors.sector}
+                      </p>
+                    )}
                   </div>
-                </form>
-              )}
+
+                  <div>
+                    <label
+                      htmlFor="quote-project-type"
+                      className="block text-xs font-semibold text-zinc-200 mb-1.5"
+                    >
+                      Tipo de Projeto <span className="text-[#F5B800]">*</span>
+                    </label>
+                    <select
+                      id="quote-project-type"
+                      name="projectType"
+                      required
+                      value={projectType}
+                      onChange={(e) => setProjectType(e.target.value)}
+                      className="lc-input text-sm"
+                    >
+                      <option value="novo">Novo Projeto</option>
+                      <option value="redesign">Melhoria / Redesign</option>
+                      <option value="sistema-360">Ecossistema 360° Completo</option>
+                    </select>
+                  </div>
+                </div>
+
+                <fieldset>
+                  <legend className="block text-xs font-semibold text-zinc-200 mb-2">
+                    Serviços de interesse <span className="text-zinc-500">(pode escolher vários)</span>
+                  </legend>
+                  <div className="grid sm:grid-cols-2 gap-2.5">
+                    {SERVICES.map((srv) => {
+                      const checked = selectedServices.includes(srv.slug);
+                      return (
+                        <label
+                          key={srv.slug}
+                          htmlFor={`quote-srv-${srv.slug}`}
+                          className={`flex items-center gap-2.5 p-3 rounded-xl bg-[#0a0b0e] border text-xs text-zinc-200 cursor-pointer transition-colors ${
+                            checked
+                              ? "border-amber-500/60 bg-amber-500/5"
+                              : "border-white/10 hover:border-amber-500/40"
+                          }`}
+                        >
+                          <input
+                            id={`quote-srv-${srv.slug}`}
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => toggleService(srv.slug)}
+                            className="accent-[#F5B800]"
+                          />
+                          <span>{srv.name}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+
+                <div>
+                  <label
+                    htmlFor="quote-description"
+                    className="block text-xs font-semibold text-zinc-200 mb-1.5"
+                  >
+                    Descreva o seu projeto ou objetivos <span className="text-[#F5B800]">*</span>
+                  </label>
+                  <textarea
+                    id="quote-description"
+                    name="description"
+                    rows={4}
+                    required
+                    value={description}
+                    onChange={(e) => {
+                      setDescription(e.target.value);
+                      if (errors.description) {
+                        setErrors((prev) => ({ ...prev, description: undefined }));
+                      }
+                    }}
+                    aria-invalid={Boolean(errors.description)}
+                    aria-describedby={errors.description ? "quote-description-error" : undefined}
+                    placeholder="Explique o que pretende alcançar, prazos desejados ou funcionalidades..."
+                    className={`lc-input text-sm ${errors.description ? "border-red-500/70" : ""}`}
+                  />
+                  {errors.description && (
+                    <p
+                      id="quote-description-error"
+                      role="alert"
+                      className="mt-1.5 text-xs text-red-400"
+                    >
+                      {errors.description}
+                    </p>
+                  )}
+                </div>
+
+                {notConnectedNotice && (
+                  <div
+                    role="status"
+                    aria-live="polite"
+                    className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/45 flex items-start gap-3 text-left"
+                  >
+                    <AlertTriangle className="w-5 h-5 text-[#F5B800] shrink-0 mt-0.5" />
+                    <div className="space-y-1 text-xs sm:text-sm">
+                      <p className="font-bold text-white">
+                        Este pedido de orçamento ainda não foi enviado
+                      </p>
+                      <p className="text-zinc-300 leading-relaxed">
+                        Todos os campos foram validados corretamente, mas a ligação de envio
+                        (email/CRM) ainda não está configurada neste ambiente de pré-visualização.
+                        Nenhum dado foi transmitido ou guardado.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="lc-btn-primary w-full py-3.5 text-sm sm:text-base inline-flex items-center justify-center gap-2 disabled:opacity-60"
+                >
+                  {submitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      A validar pedido...
+                    </>
+                  ) : (
+                    "Pedir Orçamento"
+                  )}
+                </button>
+
+                <div className="flex items-center gap-2 text-xs text-zinc-400">
+                  <Lock className="w-4 h-4 text-[#F5B800] shrink-0" />
+                  <span>
+                    Os seus dados estão protegidos e serão utilizados apenas para responder ao seu
+                    pedido.
+                  </span>
+                </div>
+              </form>
             </div>
           </div>
 

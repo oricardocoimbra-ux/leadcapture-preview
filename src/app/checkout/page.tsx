@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, Info, Lock, ShieldCheck } from "lucide-react";
+import { CheckCircle2, Info, Loader2, Lock, ShieldCheck } from "lucide-react";
 import { useCart } from "@/components/cart/CartProvider";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { isValidEmail, isValidPhone, isValidPortugueseNif } from "@/lib/form-validation";
 
 export default function CheckoutPage() {
   const { items, summary, totalCount } = useCart();
@@ -27,6 +28,26 @@ export default function CheckoutPage() {
     e.preventDefault();
     setErrorMsg(null);
 
+    if (fullName.trim().length < 2) {
+      setErrorMsg("Indique o nome completo para faturação.");
+      return;
+    }
+    if (!isValidEmail(email)) {
+      setErrorMsg("Introduza um endereço de email válido.");
+      return;
+    }
+    if (!isValidPhone(phone)) {
+      setErrorMsg("Introduza um número de telefone válido (mínimo 9 dígitos).");
+      return;
+    }
+    if (!isValidPortugueseNif(nif)) {
+      setErrorMsg("Introduza um NIF válido com 9 dígitos.");
+      return;
+    }
+    if (companyName.trim().length < 2 || billingAddress.trim().length < 5) {
+      setErrorMsg("Preencha o nome da empresa e a morada de faturação.");
+      return;
+    }
     if (!acceptContract) {
       setErrorMsg("É obrigatório aceitar as condições comerciais e o contrato aplicável.");
       return;
@@ -95,17 +116,17 @@ export default function CheckoutPage() {
             </Link>
           </div>
         ) : serverResult ? (
-          <div className="lc-card-featured rounded-3xl p-8 space-y-4">
+          <div role="status" aria-live="polite" className="lc-card-featured rounded-3xl p-8 space-y-4">
             <div className="flex items-center gap-3 text-[#F5B800]">
               <CheckCircle2 className="w-7 h-7" />
               <h2 className="text-2xl font-extrabold text-white">
-                Sessão Validada no Servidor (Stripe Test Mode)
+                Sessão Validada no Servidor (Modo de Teste — Sem Cobrança)
               </h2>
             </div>
             <p className="text-sm text-zinc-300">
               Todos os preços foram recalculados no servidor a partir do catálogo central e a
-              aceitação contratual foi registada. Como as chaves Stripe de teste ainda não estão
-              configuradas no servidor, nenhuma cobrança foi efetuada.
+              aceitação contratual foi registada. Como o checkout real ainda não está ativado,
+              nenhuma cobrança foi efetuada e nenhuma encomenda real foi submetida.
             </p>
             <pre className="p-4 rounded-xl bg-[#050507] border border-white/10 text-xs text-amber-200 overflow-x-auto">
               {JSON.stringify(serverResult, null, 2)}
@@ -115,18 +136,21 @@ export default function CheckoutPage() {
             </Link>
           </div>
         ) : (
-          <form onSubmit={handleCheckout} className="grid lg:grid-cols-12 gap-8 items-start">
+          <form onSubmit={handleCheckout} noValidate aria-busy={submitting} className="grid lg:grid-cols-12 gap-8 items-start">
             {/* Billing & Customer Details */}
             <div className="lg:col-span-7 space-y-6">
               <div className="lc-card rounded-3xl p-6 sm:p-8 space-y-4">
                 <h2 className="text-xl font-bold text-white">Dados de Faturação e Serviço</h2>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                      Nome Completo *
+                    <label htmlFor="checkout-name" className="block text-xs font-semibold text-zinc-200 mb-1.5">
+                      Nome Completo <span className="text-[#F5B800]">*</span>
                     </label>
                     <input
+                      id="checkout-name"
+                      name="name"
                       type="text"
+                      autoComplete="name"
                       required
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
@@ -134,11 +158,14 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                      Email *
+                    <label htmlFor="checkout-email" className="block text-xs font-semibold text-zinc-200 mb-1.5">
+                      Email <span className="text-[#F5B800]">*</span>
                     </label>
                     <input
+                      id="checkout-email"
+                      name="email"
                       type="email"
+                      autoComplete="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -149,11 +176,14 @@ export default function CheckoutPage() {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                      Telefone *
+                    <label htmlFor="checkout-phone" className="block text-xs font-semibold text-zinc-200 mb-1.5">
+                      Telefone <span className="text-[#F5B800]">*</span>
                     </label>
                     <input
+                      id="checkout-phone"
+                      name="phone"
                       type="tel"
+                      autoComplete="tel"
                       required
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
@@ -161,11 +191,15 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                      NIF *
+                    <label htmlFor="checkout-nif" className="block text-xs font-semibold text-zinc-200 mb-1.5">
+                      NIF (9 dígitos) <span className="text-[#F5B800]">*</span>
                     </label>
                     <input
+                      id="checkout-nif"
+                      name="nif"
                       type="text"
+                      inputMode="numeric"
+                      maxLength={9}
                       required
                       value={nif}
                       onChange={(e) => setNif(e.target.value)}
@@ -175,11 +209,14 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                    Nome da Empresa *
+                  <label htmlFor="checkout-company" className="block text-xs font-semibold text-zinc-200 mb-1.5">
+                    Nome da Empresa <span className="text-[#F5B800]">*</span>
                   </label>
                   <input
+                    id="checkout-company"
+                    name="organization"
                     type="text"
+                    autoComplete="organization"
                     required
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
@@ -188,11 +225,14 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                    Morada de Faturação *
+                  <label htmlFor="checkout-address" className="block text-xs font-semibold text-zinc-200 mb-1.5">
+                    Morada de Faturação <span className="text-[#F5B800]">*</span>
                   </label>
                   <input
+                    id="checkout-address"
+                    name="street-address"
                     type="text"
+                    autoComplete="street-address"
                     required
                     value={billingAddress}
                     onChange={(e) => setBillingAddress(e.target.value)}
@@ -201,10 +241,12 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                    Dados para Prestação do Serviço (domínio, objetivos, observações)
+                  <label htmlFor="checkout-notes" className="block text-xs font-semibold text-zinc-200 mb-1.5">
+                    Dados para Prestação do Serviço <span className="text-zinc-500">(opcional)</span>
                   </label>
                   <textarea
+                    id="checkout-notes"
+                    name="serviceNotes"
                     rows={3}
                     value={serviceNotes}
                     onChange={(e) => setServiceNotes(e.target.value)}
@@ -314,7 +356,12 @@ export default function CheckoutPage() {
                 </div>
 
                 {errorMsg && (
-                  <p className="text-xs text-red-400 font-semibold">{errorMsg}</p>
+                  <p
+                    role="alert"
+                    className="p-3 rounded-xl bg-red-500/10 border border-red-500/40 text-xs text-red-300 font-semibold"
+                  >
+                    {errorMsg}
+                  </p>
                 )}
 
                 <button
@@ -322,7 +369,11 @@ export default function CheckoutPage() {
                   disabled={submitting}
                   className="lc-btn-primary w-full py-3.5 text-sm inline-flex items-center justify-center gap-2 disabled:opacity-60"
                 >
-                  <Lock className="w-4 h-4" />
+                  {submitting ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Lock className="w-4 h-4" />
+                  )}
                   {submitting ? "A validar no servidor..." : "Validar e Processar Pagamento (Test Mode)"}
                 </button>
 

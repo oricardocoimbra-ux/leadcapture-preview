@@ -2,12 +2,42 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Info, Lock } from "lucide-react";
+import { AlertTriangle, Loader2, Lock } from "lucide-react";
 import { LeadCaptureLogo } from "@/components/ui/LeadCaptureLogo";
 import { GoogleOAuthButton } from "@/components/auth/GoogleOAuthButton";
+import { isValidEmail } from "@/lib/form-validation";
+
+type LoginErrors = Partial<Record<"email" | "password", string>>;
 
 export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<LoginErrors>({});
+  const [submitting, setSubmitting] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setNotice(null);
+
+    const next: LoginErrors = {};
+    if (!isValidEmail(email)) {
+      next.email = "Introduza um endereço de email válido.";
+    }
+    if (password.length < 1) {
+      next.password = "Introduza a sua palavra-passe.";
+    }
+    setErrors(next);
+    if (Object.keys(next).length > 0) return;
+
+    setSubmitting(true);
+    window.setTimeout(() => {
+      setSubmitting(false);
+      setNotice(
+        "Não foi iniciada sessão: a autenticação (Supabase Auth) ainda não está ligada neste ambiente de pré-visualização. Nenhuma credencial foi enviada."
+      );
+    }, 250);
+  };
 
   return (
     <div className="py-14 px-4 sm:px-6 lg:px-8 lc-glow-ambient">
@@ -25,7 +55,7 @@ export default function LoginPage() {
         <GoogleOAuthButton
           onClick={() =>
             setNotice(
-              "Google OAuth 2.0 (Supabase Auth) preparado na arquitetura. Ativar após configurar credenciais no Google Cloud Console e .env.local."
+              "Google OAuth 2.0 ainda não está ativo neste ambiente de pré-visualização. Nenhum pedido de autenticação foi enviado."
             )
           }
         />
@@ -38,22 +68,42 @@ export default function LoginPage() {
           <span className="border-t border-white/10 w-full" />
         </div>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            setNotice(
-              "Autenticação Email/Password preparada para ligação ao Supabase Auth na fase de ativação."
-            );
-          }}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit} noValidate aria-busy={submitting} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-zinc-300 mb-1.5">Email</label>
-            <input type="email" required placeholder="email@empresa.pt" className="lc-input text-sm" />
+            <label
+              htmlFor="login-email"
+              className="block text-xs font-semibold text-zinc-200 mb-1.5"
+            >
+              Email <span className="text-[#F5B800]">*</span>
+            </label>
+            <input
+              id="login-email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
+              }}
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby={errors.email ? "login-email-error" : undefined}
+              placeholder="email@empresa.pt"
+              className={`lc-input text-sm ${errors.email ? "border-red-500/70" : ""}`}
+            />
+            {errors.email && (
+              <p id="login-email-error" role="alert" className="mt-1.5 text-xs text-red-400">
+                {errors.email}
+              </p>
+            )}
           </div>
+
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-semibold text-zinc-300">Palavra-passe</label>
+              <label htmlFor="login-password" className="block text-xs font-semibold text-zinc-200">
+                Palavra-passe <span className="text-[#F5B800]">*</span>
+              </label>
               <Link
                 href="/recuperar-password"
                 className="text-xs font-semibold text-[#F5B800] hover:underline"
@@ -61,17 +111,52 @@ export default function LoginPage() {
                 Recuperar palavra-passe?
               </Link>
             </div>
-            <input type="password" required placeholder="••••••••" className="lc-input text-sm" />
+            <input
+              id="login-password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
+              }}
+              aria-invalid={Boolean(errors.password)}
+              aria-describedby={errors.password ? "login-password-error" : undefined}
+              placeholder="••••••••"
+              className={`lc-input text-sm ${errors.password ? "border-red-500/70" : ""}`}
+            />
+            {errors.password && (
+              <p id="login-password-error" role="alert" className="mt-1.5 text-xs text-red-400">
+                {errors.password}
+              </p>
+            )}
           </div>
 
-          <button type="submit" className="lc-btn-primary w-full py-3.5 text-sm">
-            Iniciar Sessão
+          <button
+            type="submit"
+            disabled={submitting}
+            className="lc-btn-primary w-full py-3.5 text-sm inline-flex items-center justify-center gap-2 disabled:opacity-60"
+          >
+            {submitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                A validar...
+              </>
+            ) : (
+              "Iniciar Sessão"
+            )}
           </button>
         </form>
 
         {notice && (
-          <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/35 flex items-start gap-2.5 text-xs text-zinc-200">
-            <Info className="w-4 h-4 text-[#F5B800] shrink-0 mt-0.5" />
+          <div
+            role="status"
+            aria-live="polite"
+            className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/40 flex items-start gap-2.5 text-xs text-zinc-200"
+          >
+            <AlertTriangle className="w-4 h-4 text-[#F5B800] shrink-0 mt-0.5" />
             <span>{notice}</span>
           </div>
         )}
@@ -85,7 +170,7 @@ export default function LoginPage() {
           </p>
           <p className="inline-flex items-center gap-1.5 text-[11px] text-zinc-500">
             <Lock className="w-3.5 h-3.5 text-[#F5B800]" />
-            Sessões protegidas por OAuth 2.0 e Supabase Auth (RLS)
+            Sessões preparadas para OAuth 2.0 e Supabase Auth (RLS)
           </p>
         </div>
       </div>

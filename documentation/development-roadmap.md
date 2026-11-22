@@ -56,4 +56,12 @@
 > - **Não utilizar** dados reais de clientes nem imagens de satélite/Google Earth Studio sem direitos comerciais confirmados.
 > - **Concluir primeiro a ronda visual atual** antes de desenhar e implementar esta fase separadamente.
 
+### Fase 7 — Soluções Digitais à Medida, Produtos de Marca Própria e Apoio ao Registo de Marcas (Requisito Pré-Lançamento)
+
+- Criar uma oferta transversal para conceber e desenvolver aplicações, automatizações e integrações personalizadas, com âmbito e orçamento definidos após avaliação do pedido.
+- Apresentar uma oferta de produtos de marca própria, começando por Beleza e Estética e incluindo apoio a conceito, identidade/embalagem, seleção de fabricante e coordenação de produção conforme o serviço realmente prestado.
+- Incluir apoio administrativo a pedidos de registo de marca no INPI, com limites de âmbito, taxas oficiais separadas, sem garantia de concessão e com recurso a AOPI/procurador autorizado quando necessário.
+- Antes de apresentar perfumes/cosméticos para venda, confirmar fabricante, Pessoa Responsável na UE, segurança, documentação, rotulagem e notificação CPNP.
+- Requisitos de lançamento, linguagem e referências oficiais: [`documentation/pre-launch-requirements.md`](./pre-launch-requirements.md).
+
 
