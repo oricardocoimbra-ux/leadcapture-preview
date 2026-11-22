@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -19,6 +19,7 @@ import { isValidEmail, isValidPhone } from "@/lib/form-validation";
 type DemoErrors = Partial<Record<"name" | "email" | "phone", string>>;
 
 export default function PedirDemonstracaoPage() {
+  const formStartedAtRef = useRef<number>(Date.now());
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -84,6 +85,7 @@ export default function PedirDemonstracaoPage() {
           services: service ? [service] : [],
           message: notes,
           website,
+          formStartedAt: formStartedAtRef.current,
         }),
       });
       const data = await res.json().catch(() => ({}));

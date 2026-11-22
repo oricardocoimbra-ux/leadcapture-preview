@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -19,6 +19,7 @@ import { isValidEmail, isValidPhone } from "@/lib/form-validation";
 type ContactErrors = Partial<Record<"name" | "email" | "phone" | "message", string>>;
 
 export default function ContactosPage() {
+  const formStartedAtRef = useRef<number>(Date.now());
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -71,6 +72,7 @@ export default function ContactosPage() {
           subject,
           message,
           website,
+          formStartedAt: formStartedAtRef.current,
         }),
       });
       const data = await res.json().catch(() => ({}));

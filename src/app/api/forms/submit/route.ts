@@ -16,7 +16,15 @@ interface FormSubmitPayload {
   message?: string;
   /** Honeypot anti-spam field — must remain empty for human submissions. */
   website?: string;
+  /** Client timestamp (ms) when the form mounted — used for minimum fill-time bot check. */
+  formStartedAt?: number;
+  /** Optional Cloudflare Turnstile token (enforced automatically if TURNSTILE_SECRET_KEY is set). */
+  turnstileToken?: string;
 }
+
+const MAX_BODY_BYTES = 12 * 1024; // 12 KB max JSON payload
+const MIN_FILL_TIME_MS = 2500; // Reject sub-2.5s instant bot submissions
+const MAX_URLS_IN_MESSAGE = 4;
 
 /**
  * PROVISIONAL IN-MEMORY RATE LIMIT (NOT PRODUCTION-GRADE PROTECTION).
@@ -26,10 +34,21 @@ interface FormSubmitPayload {
  */
 const PROVISIONAL_WINDOW_MS = 10 * 60 * 1000;
 const PROVISIONAL_MAX_REQUESTS = 5;
+const PROVISIONAL_MAX_ENTRIES = 500;
 const provisionalRateStore = new Map<string, { count: number; resetAt: number }>();
 
 function checkProvisionalRateLimit(clientKey: string): boolean {
   const now = Date.now();
+  if (provisionalRateStore.size >= PROVISIONAL_MAX_ENTRIES) {
+    for (const [key, value] of provisionalRateStore.entries()) {
+      if (now > value.resetAt) provisionalRateStore.delete(key);
+    }
+    if (provisionalRateStore.size >= PROVISIONAL_MAX_ENTRIES) {
+      const oldestKey = provisionalRateStore.keys().next().value;
+      if (oldestKey) provisionalRateStore.delete(oldestKey);
+    }
+  }
+
   const entry = provisionalRateStore.get(clientKey);
   if (!entry || now > entry.resetAt) {
     provisionalRateStore.set(clientKey, { count: 1, resetAt: now + PROVISIONAL_WINDOW_MS });
@@ -40,6 +59,36 @@ function checkProvisionalRateLimit(clientKey: string): boolean {
   }
   entry.count += 1;
   return true;
+}
+
+function isSameOriginRequest(request: NextRequest): boolean {
+  const host = request.headers.get("host")?.toLowerCase();
+  if (!host) return false;
+
+  const origin = request.headers.get("origin");
+  if (origin) {
+    try {
+      return new URL(origin).host.toLowerCase() === host;
+    } catch {
+      return false;
+    }
+  }
+
+  const referer = request.headers.get("referer");
+  if (referer) {
+    try {
+      return new URL(referer).host.toLowerCase() === host;
+    } catch {
+      return false;
+    }
+  }
+
+  return false;
+}
+
+function countUrls(text: string): number {
+  const matches = text.match(/https?:\/\/|www\./gi);
+  return matches ? matches.length : 0;
 }
 
 function sanitizeLine(value: unknown, maxLength = 200): string {
@@ -56,10 +105,67 @@ function isFormEmailEnabled(): boolean {
   return process.env.FORMS_ENABLED === "true" && Boolean(process.env.BREVO_API_KEY?.trim());
 }
 
+async function verifyTurnstileIfConfigured(token: string, clientIp: string): Promise<boolean> {
+  const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
+  if (!secret) return true; // Not configured yet — skip until launch setup
+  if (!token) return false;
+
+  try {
+    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        secret,
+        response: token,
+        ...(clientIp !== "unknown" ? { remoteip: clientIp } : {}),
+      }),
+    });
+    if (!res.ok) return false;
+    const data = (await res.json()) as { success?: boolean };
+    return data.success === true;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(request: NextRequest) {
+  // 1. Same-origin / CSRF protection against cross-site automated POSTs.
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json(
+      { ok: false, error: "Origem do pedido não autorizada." },
+      { status: 403 }
+    );
+  }
+
+  // 2. Require JSON content type and enforce strict payload size cap.
+  const contentType = request.headers.get("content-type") || "";
+  if (!contentType.toLowerCase().includes("application/json")) {
+    return NextResponse.json(
+      { ok: false, error: "Tipo de conteúdo inválido." },
+      { status: 415 }
+    );
+  }
+
+  let rawBody: string;
+  try {
+    rawBody = await request.text();
+  } catch {
+    return NextResponse.json(
+      { ok: false, error: "Não foi possível ler o pedido." },
+      { status: 400 }
+    );
+  }
+
+  if (Buffer.byteLength(rawBody, "utf8") > MAX_BODY_BYTES) {
+    return NextResponse.json(
+      { ok: false, error: "Pedido demasiado grande." },
+      { status: 413 }
+    );
+  }
+
   let body: FormSubmitPayload;
   try {
-    body = (await request.json()) as FormSubmitPayload;
+    body = JSON.parse(rawBody) as FormSubmitPayload;
   } catch {
     return NextResponse.json(
       { ok: false, error: "Pedido inválido (JSON malformado)." },
@@ -67,25 +173,47 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Honeypot check: silently acknowledge without sending email if filled by a bot.
+  // 3. Honeypot check: silently ignore bots without sending email.
   if (typeof body.website === "string" && body.website.trim().length > 0) {
     return NextResponse.json({ ok: true, ignored: true }, { status: 200 });
   }
 
-  // Provisional in-memory rate limiting per client IP.
+  // 4. Minimum human fill-time check: silently ignore instant bot submissions (< 2.5s).
+  if (
+    typeof body.formStartedAt === "number" &&
+    Number.isFinite(body.formStartedAt) &&
+    Date.now() - body.formStartedAt < MIN_FILL_TIME_MS
+  ) {
+    return NextResponse.json({ ok: true, ignored: true }, { status: 200 });
+  }
+
+  // 5. Provisional in-memory rate limiting per client IP (bounded Map, serverless-provisional).
   const forwardedFor = request.headers.get("x-forwarded-for") || "";
   const clientIp = forwardedFor.split(",")[0]?.trim() || "unknown";
   if (!checkProvisionalRateLimit(clientIp)) {
     return NextResponse.json(
       {
         ok: false,
-        error: "Demasiados pedidos num curto intervalo. Aguarde alguns minutos antes de tentar novamente.",
+        error:
+          "Demasiados pedidos num curto intervalo. Aguarde alguns minutos antes de tentar novamente.",
       },
       { status: 429 }
     );
   }
 
-  // Server-side validation (runs regardless of whether sending is enabled).
+  // 6. Optional Cloudflare Turnstile verification (active automatically once TURNSTILE_SECRET_KEY is set).
+  const turnstileOk = await verifyTurnstileIfConfigured(
+    sanitizeLine(body.turnstileToken, 2048),
+    clientIp
+  );
+  if (!turnstileOk) {
+    return NextResponse.json(
+      { ok: false, error: "Falha na verificação anti-spam. Atualize a página e tente novamente." },
+      { status: 400 }
+    );
+  }
+
+  // 7. Server-side validation (runs regardless of whether sending is enabled).
   const formType: FormType =
     body.formType === "orcamento" || body.formType === "demonstracao"
       ? body.formType
@@ -110,6 +238,10 @@ export async function POST(request: NextRequest) {
   if (!isValidEmail(email)) {
     fieldErrors.email = "Introduza um endereço de email válido.";
   }
+  if (countUrls(message) > MAX_URLS_IN_MESSAGE) {
+    fieldErrors.message = "A mensagem contém demasiados links. Remova links desnecessários.";
+  }
+
   if (formType === "contactos") {
     if (phone.length > 0 && !isValidPhone(phone)) {
       fieldErrors.phone = "Introduza um número de telefone válido (mínimo 9 dígitos).";
@@ -140,7 +272,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Keep sending disabled unless explicitly enabled and configured via server env vars.
+  // 8. Keep sending disabled unless explicitly enabled and configured via server env vars.
   // Submissions are NOT persisted in any database.
   if (!isFormEmailEnabled()) {
     return NextResponse.json(
@@ -182,7 +314,7 @@ export async function POST(request: NextRequest) {
   ].filter((line): line is string => line !== null);
 
   try {
-    // Brevo Transactional Email API (DKIM1/DKIM2 + DMARC already authenticated on leadcapture.cloud).
+    // Brevo Transactional Email API (LeadCapture <geral@leadcapture.cloud> verified sender).
     // Fixed authorized sender, fixed recipient (geral@leadcapture.cloud), visitor email ONLY in replyTo.
     const brevoRes = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",

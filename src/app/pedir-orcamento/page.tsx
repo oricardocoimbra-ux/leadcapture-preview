@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AlertTriangle, CheckCircle2, Clock, Loader2, Lock } from "lucide-react";
 import { SECTORS } from "@/data/sectors";
@@ -13,6 +13,7 @@ type QuoteErrors = Partial<
 >;
 
 export default function PedirOrcamentoPage() {
+  const formStartedAtRef = useRef<number>(Date.now());
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -92,6 +93,7 @@ export default function PedirOrcamentoPage() {
           services: selectedServices,
           message: description,
           website,
+          formStartedAt: formStartedAtRef.current,
         }),
       });
       const data = await res.json().catch(() => ({}));
