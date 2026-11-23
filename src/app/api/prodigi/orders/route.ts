@@ -1,72 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
+  ALLOWED_PRODIGI_SHIPPING_METHODS,
+  checkProvisionalProdigiRateLimit,
   createProdigiSandboxOrder,
   getProdigiConfigStatus,
+  getTrustedClientIp,
+  hasValidSameOrigin,
+  isValidIdempotencyKey,
+  readJsonWithByteCap,
   type ProdigiOrderRequest,
   type ProdigiShippingMethod,
 } from "@/lib/prodigi/client";
 
-const MAX_BODY_BYTES = 12 * 1024;
-const ALLOWED_SHIPPING_METHODS: ProdigiShippingMethod[] = [
-  "Budget",
-  "Standard",
-  "Express",
-  "Overnight",
-];
-
-function isSameOrigin(request: NextRequest): boolean {
-  const origin = request.headers.get("origin");
-  if (!origin) return true;
-  try {
-    return new URL(origin).host === request.nextUrl.host;
-  } catch {
-    return false;
-  }
-}
-
-async function readJsonWithCap(request: NextRequest): Promise<{ ok: true; data: unknown } | { ok: false; status: number; error: string }> {
-  const declaredLength = Number(request.headers.get("content-length") || "0");
-  if (Number.isFinite(declaredLength) && declaredLength > MAX_BODY_BYTES) {
-    return { ok: false, status: 413, error: "Pedido demasiado grande." };
-  }
-  if (!request.body) {
-    return { ok: false, status: 400, error: "Corpo do pedido vazio." };
-  }
-  const reader = request.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let total = 0;
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      if (!value) continue;
-      total += value.byteLength;
-      if (total > MAX_BODY_BYTES) {
-        await reader.cancel().catch(() => undefined);
-        return { ok: false, status: 413, error: "Pedido demasiado grande." };
-      }
-      chunks.push(value);
-    }
-  } catch {
-    return { ok: false, status: 400, error: "Não foi possível ler o pedido." };
-  }
-  const merged = new Uint8Array(total);
-  let offset = 0;
-  for (const c of chunks) {
-    merged.set(c, offset);
-    offset += c.byteLength;
-  }
-  try {
-    return { ok: true, data: JSON.parse(new TextDecoder("utf-8").decode(merged)) };
-  } catch {
-    return { ok: false, status: 400, error: "JSON inválido." };
-  }
-}
+const ORDERS_MAX_REQ_PER_10_MIN = 5;
 
 function isHttpsUrl(url: string): boolean {
   try {
-    const parsed = new URL(url);
-    return parsed.protocol === "https:";
+    return new URL(url).protocol === "https:";
   } catch {
     return false;
   }
@@ -74,12 +24,20 @@ function isHttpsUrl(url: string): boolean {
 
 /**
  * POST /api/prodigi/orders
- * Strictly SANDBOX-ONLY and DISABLED BY DEFAULT.
- * Never places real production print orders or triggers payment charges.
+ * Prodigi Print API v5 (/v5/orders) — SANDBOX-ONLY, DRAFT-FIRST, DISABLED BY DEFAULT.
+ *
+ * Security & Idempotency:
+ * - Rejects requests without a valid same-origin Origin/Referer header (403).
+ * - Provisional per-IP rate limiting (5 req / 10 min; replace with auth + distributed rate limit before launch).
+ * - Requires caller-supplied `Idempotency-Key` (header or body) unique per purchase attempt
+ *   so network retries are deduplicated without ever blocking future identical purchases.
  */
 export async function POST(request: NextRequest) {
-  if (!isSameOrigin(request)) {
-    return NextResponse.json({ ok: false, error: "Origem não autorizada." }, { status: 403 });
+  if (!hasValidSameOrigin(request)) {
+    return NextResponse.json(
+      { ok: false, error: "Origem do pedido ausente ou não autorizada." },
+      { status: 403 }
+    );
   }
 
   const contentType = request.headers.get("content-type") || "";
@@ -87,14 +45,44 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Tipo de conteúdo inválido." }, { status: 415 });
   }
 
-  const parsed = await readJsonWithCap(request);
+  const clientIp = getTrustedClientIp(request);
+  if (!checkProvisionalProdigiRateLimit("orders", clientIp, ORDERS_MAX_REQ_PER_10_MIN)) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "Demasiados pedidos de encomenda num curto intervalo. Aguarde alguns minutos.",
+      },
+      { status: 429 }
+    );
+  }
+
+  const parsed = await readJsonWithByteCap(request);
   if (!parsed.ok) {
     return NextResponse.json({ ok: false, error: parsed.error }, { status: parsed.status });
   }
 
   const body = (parsed.data ?? {}) as Partial<ProdigiOrderRequest>;
+  const idempotencyKey = (
+    request.headers.get("idempotency-key") ||
+    body.idempotencyKey ||
+    ""
+  ).trim();
+
+  if (!isValidIdempotencyKey(idempotencyKey)) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error:
+          "Cabeçalho ou campo Idempotency-Key obrigatório (16–128 caracteres alfanuméricos, hífen ou underscore) único por tentativa de compra.",
+      },
+      { status: 400 }
+    );
+  }
+
   const merchantReference = String(body.merchantReference || "").trim();
-  const shippingMethod = (body.shippingMethod || "Standard") as ProdigiShippingMethod;
+  const shippingMethod = String(body.shippingMethod || "standard")
+    .trim()
+    .toLowerCase() as ProdigiShippingMethod;
   const recipient = body.recipient;
   const items = Array.isArray(body.items) ? body.items : [];
 
@@ -104,8 +92,11 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
-  if (!ALLOWED_SHIPPING_METHODS.includes(shippingMethod)) {
-    return NextResponse.json({ ok: false, error: "Método de envio inválido." }, { status: 400 });
+  if (!ALLOWED_PRODIGI_SHIPPING_METHODS.includes(shippingMethod)) {
+    return NextResponse.json(
+      { ok: false, error: "Método de envio Prodigi v5 inválido (budget, standard, express, overnight)." },
+      { status: 400 }
+    );
   }
   if (
     !recipient?.name?.trim() ||
@@ -115,7 +106,11 @@ export async function POST(request: NextRequest) {
     !/^[A-Z]{2}$/.test(String(recipient?.address?.countryCode || "").trim().toUpperCase())
   ) {
     return NextResponse.json(
-      { ok: false, error: "Morada de envio incompleta (nome, line1, localidade, código postal e país ISO-2)." },
+      {
+        ok: false,
+        error:
+          "Morada de envio incompleta (nome, line1, localidade, código postal e país ISO-2).",
+      },
       { status: 400 }
     );
   }
@@ -127,9 +122,10 @@ export async function POST(request: NextRequest) {
   }
 
   for (const it of items) {
-    if (!it?.sku?.trim() || !Number.isInteger(it.copies) || it.copies < 1 || it.copies > 200) {
+    const qty = typeof it?.quantity === "number" ? it.quantity : NaN;
+    if (!it?.sku?.trim() || !Number.isInteger(qty) || qty < 1 || qty > 200) {
       return NextResponse.json(
-        { ok: false, error: "Cada item requer SKU Prodigi válido e quantidade entre 1 e 200." },
+        { ok: false, error: "Cada item requer SKU Prodigi válido e quantity entre 1 e 200." },
         { status: 400 }
       );
     }
@@ -155,17 +151,19 @@ export async function POST(request: NextRequest) {
       {
         ok: false,
         configured: false,
+        apiVersion: "v5",
         sandboxOnly: true,
         error:
-          "A criação de encomendas Prodigi Sandbox está desativada neste ambiente. Nenhuma encomenda foi criada.",
+          "A criação de encomendas Prodigi v5 Sandbox está desativada neste ambiente. Nenhuma encomenda foi criada.",
       },
       { status: 503 }
     );
   }
-  if (config.environment !== "sandbox") {
+  if (config.environment !== "sandbox" || !config.sandboxKeyPrefixValid) {
     return NextResponse.json(
       {
         ok: false,
+        apiVersion: "v5",
         sandboxOnly: true,
         error:
           "Encomendas live Prodigi estão bloqueadas antes da validação física e aprovação explícita de lançamento.",
@@ -177,7 +175,8 @@ export async function POST(request: NextRequest) {
   const result = await createProdigiSandboxOrder({
     merchantReference,
     shippingMethod,
-    idempotencyKey: body.idempotencyKey,
+    idempotencyKey,
+    submit: Boolean(body.submit),
     recipient: {
       name: recipient.name.trim(),
       email: recipient.email?.trim() || undefined,
@@ -194,7 +193,7 @@ export async function POST(request: NextRequest) {
     items: items.map((it) => ({
       merchantReference: it.merchantReference?.trim() || undefined,
       sku: it.sku.trim(),
-      copies: it.copies,
+      quantity: it.quantity,
       sizing: it.sizing || "fillPrintArea",
       attributes: it.attributes,
       assets: it.assets.map((a) => ({
@@ -213,7 +212,13 @@ export async function POST(request: NextRequest) {
   }
 
   return NextResponse.json(
-    { ok: true, environment: "sandbox", order: result.data },
+    {
+      ok: true,
+      apiVersion: "v5",
+      environment: "sandbox",
+      mode: body.submit ? "submitted" : "draft",
+      order: result.data,
+    },
     { status: 201 }
   );
 }

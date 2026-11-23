@@ -1,19 +1,33 @@
 import crypto from "node:crypto";
+import type { NextRequest } from "next/server";
 
 /**
- * Prodigi Print API v4 — Server-side Sandbox-First Client
+ * Prodigi Print API v5 — Server-side Sandbox-First Client
+ *
+ * Official v5 Architecture (recommended by Prodigi for all new integrations):
+ * - Unified Base URL: https://api.prodigi.com/v5
+ * - Environment determined by X-API-Key prefix: `sandbox_...` vs `live_...`
+ * - Draft-first order lifecycle: POST /v5/orders (submit defaults to false)
+ * - Quoting endpoint: POST /v5/quotes/order
+ * - Idempotency: passed via `Idempotency-Key` HTTP header per purchase attempt
  *
  * Security & Launch Guardrails:
  * - Strictly server-only (never import in "use client" components).
- * - Disabled by default unless PRODIGI_ENABLED === "true" and PRODIGI_API_KEY is present.
- * - Defaults to Sandbox (https://api.sandbox.prodigi.com/v4.0).
- * - Live production orders remain hard-blocked in this pre-launch phase.
+ * - Disabled by default unless PRODIGI_ENABLED === "true" and a `sandbox_` API key is set.
+ * - Live (`live_`) keys and `PRODIGI_ENV=live` are hard-blocked until explicit owner approval.
  */
 
-export const PRODIGI_SANDBOX_BASE_URL = "https://api.sandbox.prodigi.com/v4.0";
+export const PRODIGI_V5_BASE_URL = "https://api.prodigi.com/v5";
 
 export type ProdigiEnvironment = "sandbox" | "live";
-export type ProdigiShippingMethod = "Budget" | "Standard" | "Express" | "Overnight";
+export type ProdigiShippingMethod = "budget" | "standard" | "express" | "overnight";
+
+export const ALLOWED_PRODIGI_SHIPPING_METHODS: ProdigiShippingMethod[] = [
+  "budget",
+  "standard",
+  "express",
+  "overnight",
+];
 
 export type QrPlaqueDestinationType =
   | "menu-digital"
@@ -55,7 +69,7 @@ export interface ProdigiAsset {
 
 export interface ProdigiQuoteItem {
   sku: string;
-  copies: number;
+  quantity: number;
   attributes?: Record<string, string>;
   assets: Array<{ printArea: string }>;
 }
@@ -70,7 +84,7 @@ export interface ProdigiQuoteRequest {
 export interface ProdigiOrderItem {
   merchantReference?: string;
   sku: string;
-  copies: number;
+  quantity: number;
   sizing?: "fillPrintArea" | "fitPrintArea" | "stretchToPrintArea";
   attributes?: Record<string, string>;
   assets: ProdigiAsset[];
@@ -79,18 +93,23 @@ export interface ProdigiOrderItem {
 export interface ProdigiOrderRequest {
   merchantReference: string;
   shippingMethod: ProdigiShippingMethod;
-  idempotencyKey?: string;
-  callbackUrl?: string;
+  /** Caller-supplied unique key per purchase attempt (reused only on retries of the same attempt). */
+  idempotencyKey: string;
+  /** Draft-first in v5: defaults to false (draft). Set true only when explicitly submitting in sandbox. */
+  submit?: boolean;
   recipient: ProdigiRecipient;
   items: ProdigiOrderItem[];
   metadata?: Record<string, string>;
 }
 
 export interface ProdigiConfigStatus {
+  apiVersion: "v5";
+  baseUrl: string;
   enabled: boolean;
   environment: ProdigiEnvironment;
   sandboxOnly: boolean;
   apiKeyConfigured: boolean;
+  sandboxKeyPrefixValid: boolean;
   webhookSecretConfigured: boolean;
   readyForSandboxRequests: boolean;
 }
@@ -106,36 +125,44 @@ export function getProdigiConfigStatus(): ProdigiConfigStatus {
   const enabled = process.env.PRODIGI_ENABLED === "true";
   const rawEnv = (process.env.PRODIGI_ENV || "sandbox").trim().toLowerCase();
   const environment: ProdigiEnvironment = rawEnv === "live" ? "live" : "sandbox";
-  const apiKeyConfigured = Boolean(process.env.PRODIGI_API_KEY?.trim());
+  const apiKey = process.env.PRODIGI_API_KEY?.trim() || "";
+  const apiKeyConfigured = Boolean(apiKey);
+  const sandboxKeyPrefixValid = apiKey.startsWith("sandbox_");
   const webhookSecretConfigured = Boolean(process.env.PRODIGI_WEBHOOK_SECRET?.trim());
   const sandboxOnly = true; // Hard-locked to sandbox until explicit owner pre-launch approval
 
   return {
+    apiVersion: "v5",
+    baseUrl: PRODIGI_V5_BASE_URL,
     enabled,
     environment,
     sandboxOnly,
     apiKeyConfigured,
+    sandboxKeyPrefixValid,
     webhookSecretConfigured,
-    readyForSandboxRequests: enabled && apiKeyConfigured && environment === "sandbox",
+    readyForSandboxRequests:
+      enabled && apiKeyConfigured && sandboxKeyPrefixValid && environment === "sandbox",
   };
 }
 
-function getSandboxHeaders(): Record<string, string> | null {
+function getSandboxHeaders(extra?: Record<string, string>): Record<string, string> | null {
   const status = getProdigiConfigStatus();
   if (!status.readyForSandboxRequests) return null;
-  const apiKey = process.env.PRODIGI_API_KEY?.trim();
-  if (!apiKey) return null;
+  const apiKey = process.env.PRODIGI_API_KEY?.trim() || "";
+  if (!apiKey.startsWith("sandbox_")) return null;
 
   return {
     "X-API-Key": apiKey,
     "Content-Type": "application/json",
     Accept: "application/json",
+    ...(extra ?? {}),
   };
 }
 
-async function prodigiSandboxFetch<T = unknown>(
+async function prodigiV5SandboxFetch<T = unknown>(
   path: string,
-  init: RequestInit
+  init: RequestInit,
+  extraHeaders?: Record<string, string>
 ): Promise<ProdigiApiResult<T>> {
   const status = getProdigiConfigStatus();
   if (!status.enabled || !status.apiKeyConfigured) {
@@ -143,35 +170,32 @@ async function prodigiSandboxFetch<T = unknown>(
       ok: false,
       status: 503,
       error:
-        "A integração Prodigi encontra-se desativada neste ambiente. Nenhuma chamada externa foi executada.",
+        "A integração Prodigi v5 encontra-se desativada neste ambiente. Nenhuma chamada externa foi executada.",
     };
   }
 
-  if (status.environment !== "sandbox") {
+  if (status.environment !== "sandbox" || !status.sandboxKeyPrefixValid) {
     return {
       ok: false,
       status: 403,
       error:
-        "O modo live da Prodigi está bloqueado nesta fase pré-lançamento. Utilize apenas o ambiente sandbox.",
+        "O modo live da Prodigi está bloqueado nesta fase pré-lançamento. Utilize apenas uma chave com prefixo sandbox_ em PRODIGI_ENV=sandbox.",
     };
   }
 
-  const headers = getSandboxHeaders();
+  const headers = getSandboxHeaders(extraHeaders);
   if (!headers) {
     return {
       ok: false,
       status: 503,
-      error: "Credenciais Prodigi Sandbox não configuradas no servidor.",
+      error: "Credenciais Prodigi v5 Sandbox não configuradas no servidor.",
     };
   }
 
   try {
-    const res = await fetch(`${PRODIGI_SANDBOX_BASE_URL}${path}`, {
+    const res = await fetch(`${PRODIGI_V5_BASE_URL}${path}`, {
       ...init,
-      headers: {
-        ...headers,
-        ...(init.headers as Record<string, string> | undefined),
-      },
+      headers,
       cache: "no-store",
     });
 
@@ -181,7 +205,7 @@ async function prodigiSandboxFetch<T = unknown>(
         ok: false,
         status: res.status,
         data,
-        error: "A API Prodigi Sandbox devolveu um erro ao processar o pedido.",
+        error: "A API Prodigi v5 Sandbox devolveu um erro ao processar o pedido.",
       };
     }
 
@@ -190,7 +214,7 @@ async function prodigiSandboxFetch<T = unknown>(
     return {
       ok: false,
       status: 502,
-      error: "Não foi possível comunicar com a API Prodigi Sandbox.",
+      error: "Não foi possível comunicar com a API Prodigi v5 Sandbox.",
     };
   }
 }
@@ -200,7 +224,7 @@ export async function getProdigiProduct(sku: string): Promise<ProdigiApiResult> 
   if (!cleanSku) {
     return { ok: false, status: 400, error: "SKU Prodigi inválido." };
   }
-  return prodigiSandboxFetch(`/products/${encodeURIComponent(cleanSku)}`, {
+  return prodigiV5SandboxFetch(`/products/${encodeURIComponent(cleanSku)}`, {
     method: "GET",
   });
 }
@@ -208,7 +232,7 @@ export async function getProdigiProduct(sku: string): Promise<ProdigiApiResult> 
 export async function createProdigiQuote(
   payload: ProdigiQuoteRequest
 ): Promise<ProdigiApiResult> {
-  return prodigiSandboxFetch("/quotes", {
+  return prodigiV5SandboxFetch("/quotes/order", {
     method: "POST",
     body: JSON.stringify(payload),
   });
@@ -217,30 +241,30 @@ export async function createProdigiQuote(
 export async function createProdigiSandboxOrder(
   payload: ProdigiOrderRequest
 ): Promise<ProdigiApiResult> {
-  const idempotencyKey =
-    payload.idempotencyKey?.trim() ||
-    crypto
-      .createHash("sha256")
-      .update(
-        JSON.stringify({
-          merchantReference: payload.merchantReference,
-          items: payload.items,
-          postal: payload.recipient.address.postalOrZipCode,
-        })
-      )
-      .digest("hex")
-      .slice(0, 64);
+  const idempotencyKey = payload.idempotencyKey.trim();
+  if (!isValidIdempotencyKey(idempotencyKey)) {
+    return {
+      ok: false,
+      status: 400,
+      error:
+        "Idempotency-Key obrigatório (16 a 128 caracteres alfanuméricos, hífen ou underscore) único por tentativa de compra.",
+    };
+  }
 
-  const callbackUrl = payload.callbackUrl || process.env.PRODIGI_CALLBACK_URL?.trim() || undefined;
+  const { idempotencyKey: _omit, ...bodyPayload } = payload;
+  void _omit;
 
-  return prodigiSandboxFetch("/orders", {
-    method: "POST",
-    body: JSON.stringify({
-      ...payload,
-      idempotencyKey,
-      ...(callbackUrl ? { callbackUrl } : {}),
-    }),
-  });
+  return prodigiV5SandboxFetch(
+    "/orders",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        ...bodyPayload,
+        submit: Boolean(bodyPayload.submit),
+      }),
+    },
+    { "Idempotency-Key": idempotencyKey }
+  );
 }
 
 export async function getProdigiOrder(orderId: string): Promise<ProdigiApiResult> {
@@ -248,7 +272,181 @@ export async function getProdigiOrder(orderId: string): Promise<ProdigiApiResult
   if (!cleanId) {
     return { ok: false, status: 400, error: "Identificador de encomenda Prodigi inválido." };
   }
-  return prodigiSandboxFetch(`/orders/${encodeURIComponent(cleanId)}`, {
+  return prodigiV5SandboxFetch(`/orders/${encodeURIComponent(cleanId)}`, {
     method: "GET",
   });
+}
+
+/* ---------- Shared Route Security Helpers ---------- */
+
+export function isValidIdempotencyKey(key: string): boolean {
+  return /^[A-Za-z0-9_-]{16,128}$/.test(key);
+}
+
+/**
+ * Strict same-origin check: requires a valid Origin (or Referer fallback) matching request.nextUrl.host.
+ * Requests without Origin AND without Referer are REJECTED (403) to block direct automated POST abuse.
+ */
+export function hasValidSameOrigin(request: NextRequest): boolean {
+  const expectedHost = request.nextUrl.host;
+  const origin = request.headers.get("origin");
+  if (origin) {
+    try {
+      return new URL(origin).host === expectedHost;
+    } catch {
+      return false;
+    }
+  }
+  const referer = request.headers.get("referer");
+  if (referer) {
+    try {
+      return new URL(referer).host === expectedHost;
+    } catch {
+      return false;
+    }
+  }
+  return false;
+}
+
+/**
+ * Extract client IP preferring trusted proxy headers over spoofable leftmost X-Forwarded-For.
+ */
+export function getTrustedClientIp(request: NextRequest): string {
+  const vercelFwd = request.headers.get("x-vercel-forwarded-for");
+  if (vercelFwd) {
+    const ip = vercelFwd.split(",")[0]?.trim();
+    if (ip) return ip;
+  }
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+  const cfIp = request.headers.get("cf-connecting-ip")?.trim();
+  if (cfIp) return cfIp;
+  const xff = request.headers.get("x-forwarded-for");
+  if (xff) {
+    const parts = xff.split(",").map((p) => p.trim()).filter(Boolean);
+    if (parts.length > 0) return parts[parts.length - 1];
+  }
+  return "unknown";
+}
+
+/**
+ * Bounded provisional in-memory rate limiter (per serverless instance).
+ * NOTE: Provisional abuse protection only — replace with distributed store (Upstash/Redis)
+ * and authenticated checkout/admin sessions before production launch.
+ */
+interface RateBucket {
+  count: number;
+  resetAt: number;
+}
+
+const RATE_BUCKETS = new Map<string, RateBucket>();
+const MAX_TRACKED_KEYS = 500;
+
+export function checkProvisionalProdigiRateLimit(
+  scope: "quote" | "orders",
+  ip: string,
+  maxRequests: number,
+  windowMs = 10 * 60 * 1000
+): boolean {
+  const now = Date.now();
+  const key = `${scope}:${ip}`;
+  const existing = RATE_BUCKETS.get(key);
+
+  if (!existing || now > existing.resetAt) {
+    if (RATE_BUCKETS.size >= MAX_TRACKED_KEYS) {
+      for (const [k, v] of RATE_BUCKETS.entries()) {
+        if (now > v.resetAt) RATE_BUCKETS.delete(k);
+      }
+      if (RATE_BUCKETS.size >= MAX_TRACKED_KEYS) {
+        const oldest = RATE_BUCKETS.keys().next().value;
+        if (oldest) RATE_BUCKETS.delete(oldest);
+      }
+    }
+    RATE_BUCKETS.set(key, { count: 1, resetAt: now + windowMs });
+    return true;
+  }
+
+  if (existing.count >= maxRequests) return false;
+  existing.count += 1;
+  return true;
+}
+
+export async function readJsonWithByteCap(
+  request: NextRequest,
+  maxBytes = 12 * 1024
+): Promise<{ ok: true; data: unknown } | { ok: false; status: number; error: string }> {
+  const declaredLength = Number(request.headers.get("content-length") || "0");
+  if (Number.isFinite(declaredLength) && declaredLength > maxBytes) {
+    return { ok: false, status: 413, error: "Pedido demasiado grande." };
+  }
+  if (!request.body) {
+    return { ok: false, status: 400, error: "Corpo do pedido vazio." };
+  }
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (!value) continue;
+      total += value.byteLength;
+      if (total > maxBytes) {
+        await reader.cancel().catch(() => undefined);
+        return { ok: false, status: 413, error: "Pedido demasiado grande." };
+      }
+      chunks.push(value);
+    }
+  } catch {
+    return { ok: false, status: 400, error: "Não foi possível ler o pedido." };
+  }
+  const merged = new Uint8Array(total);
+  let offset = 0;
+  for (const c of chunks) {
+    merged.set(c, offset);
+    offset += c.byteLength;
+  }
+  try {
+    return { ok: true, data: JSON.parse(new TextDecoder("utf-8").decode(merged)) };
+  } catch {
+    return { ok: false, status: 400, error: "JSON inválido." };
+  }
+}
+
+export function verifyHmacSignature(
+  rawBody: string,
+  secret: string,
+  signatureHeader: string,
+  webhookId?: string | null,
+  webhookTimestamp?: string | null
+): boolean {
+  const cleanSig = signatureHeader.trim();
+  if (!cleanSig) return false;
+
+  // Support both Standard Webhooks format (`v1,<base64>` signed over `${id}.${timestamp}.${rawBody}`)
+  // and hex/base64 HMAC-SHA256 over rawBody directly.
+  if (webhookId && webhookTimestamp && cleanSig.includes("v1,")) {
+    const signedContent = `${webhookId}.${webhookTimestamp}.${rawBody}`;
+    const expectedBase64 = crypto
+      .createHmac("sha256", secret)
+      .update(signedContent, "utf8")
+      .digest("base64");
+    const candidates = cleanSig
+      .split(/\s+/)
+      .filter((part) => part.startsWith("v1,"))
+      .map((part) => part.slice(3));
+    return candidates.some((candidate) => timingSafeEqualStr(candidate, expectedBase64));
+  }
+
+  const normalized = cleanSig.startsWith("sha256=") ? cleanSig.slice(7) : cleanSig;
+  const expectedHex = crypto.createHmac("sha256", secret).update(rawBody, "utf8").digest("hex");
+  const expectedB64 = crypto.createHmac("sha256", secret).update(rawBody, "utf8").digest("base64");
+  return timingSafeEqualStr(normalized, expectedHex) || timingSafeEqualStr(normalized, expectedB64);
+}
+
+function timingSafeEqualStr(a: string, b: string): boolean {
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+  if (aBuf.length !== bBuf.length) return false;
+  return crypto.timingSafeEqual(aBuf, bBuf);
 }

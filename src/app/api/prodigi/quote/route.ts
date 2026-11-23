@@ -1,71 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
+  ALLOWED_PRODIGI_SHIPPING_METHODS,
+  checkProvisionalProdigiRateLimit,
   createProdigiQuote,
   getProdigiConfigStatus,
+  getTrustedClientIp,
+  hasValidSameOrigin,
+  readJsonWithByteCap,
   type ProdigiQuoteRequest,
   type ProdigiShippingMethod,
 } from "@/lib/prodigi/client";
 
-const MAX_BODY_BYTES = 12 * 1024;
-const ALLOWED_SHIPPING_METHODS: ProdigiShippingMethod[] = [
-  "Budget",
-  "Standard",
-  "Express",
-  "Overnight",
-];
+const QUOTE_MAX_REQ_PER_10_MIN = 15;
 
-function isSameOrigin(request: NextRequest): boolean {
-  const origin = request.headers.get("origin");
-  if (!origin) return true;
-  try {
-    return new URL(origin).host === request.nextUrl.host;
-  } catch {
-    return false;
-  }
-}
-
-async function readJsonWithCap(request: NextRequest): Promise<{ ok: true; data: unknown } | { ok: false; status: number; error: string }> {
-  const declaredLength = Number(request.headers.get("content-length") || "0");
-  if (Number.isFinite(declaredLength) && declaredLength > MAX_BODY_BYTES) {
-    return { ok: false, status: 413, error: "Pedido demasiado grande." };
-  }
-  if (!request.body) {
-    return { ok: false, status: 400, error: "Corpo do pedido vazio." };
-  }
-  const reader = request.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let total = 0;
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      if (!value) continue;
-      total += value.byteLength;
-      if (total > MAX_BODY_BYTES) {
-        await reader.cancel().catch(() => undefined);
-        return { ok: false, status: 413, error: "Pedido demasiado grande." };
-      }
-      chunks.push(value);
-    }
-  } catch {
-    return { ok: false, status: 400, error: "Não foi possível ler o pedido." };
-  }
-  const merged = new Uint8Array(total);
-  let offset = 0;
-  for (const c of chunks) {
-    merged.set(c, offset);
-    offset += c.byteLength;
-  }
-  try {
-    return { ok: true, data: JSON.parse(new TextDecoder("utf-8").decode(merged)) };
-  } catch {
-    return { ok: false, status: 400, error: "JSON inválido." };
-  }
-}
-
+/**
+ * POST /api/prodigi/quote
+ * Prodigi Print API v5 (/v5/quotes/order) sandbox proxy — disabled by default.
+ * Security: strict same-origin (rejects missing Origin/Referer), 12 KB streaming cap,
+ * provisional per-IP rate limiting (replace with distributed store before launch).
+ */
 export async function POST(request: NextRequest) {
-  if (!isSameOrigin(request)) {
-    return NextResponse.json({ ok: false, error: "Origem não autorizada." }, { status: 403 });
+  if (!hasValidSameOrigin(request)) {
+    return NextResponse.json(
+      { ok: false, error: "Origem do pedido ausente ou não autorizada." },
+      { status: 403 }
+    );
   }
 
   const contentType = request.headers.get("content-type") || "";
@@ -73,14 +32,27 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Tipo de conteúdo inválido." }, { status: 415 });
   }
 
-  const parsed = await readJsonWithCap(request);
+  const clientIp = getTrustedClientIp(request);
+  if (!checkProvisionalProdigiRateLimit("quote", clientIp, QUOTE_MAX_REQ_PER_10_MIN)) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "Demasiados pedidos de cotação num curto intervalo. Aguarde alguns minutos.",
+      },
+      { status: 429 }
+    );
+  }
+
+  const parsed = await readJsonWithByteCap(request);
   if (!parsed.ok) {
     return NextResponse.json({ ok: false, error: parsed.error }, { status: parsed.status });
   }
 
   const body = (parsed.data ?? {}) as Partial<ProdigiQuoteRequest>;
   const destinationCountryCode = String(body.destinationCountryCode || "PT").trim().toUpperCase();
-  const shippingMethod = (body.shippingMethod || "Standard") as ProdigiShippingMethod;
+  const shippingMethod = String(body.shippingMethod || "standard")
+    .trim()
+    .toLowerCase() as ProdigiShippingMethod;
   const items = Array.isArray(body.items) ? body.items : [];
 
   if (!/^[A-Z]{2}$/.test(destinationCountryCode)) {
@@ -89,9 +61,9 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
-  if (!ALLOWED_SHIPPING_METHODS.includes(shippingMethod)) {
+  if (!ALLOWED_PRODIGI_SHIPPING_METHODS.includes(shippingMethod)) {
     return NextResponse.json(
-      { ok: false, error: "Método de envio Prodigi inválido." },
+      { ok: false, error: "Método de envio Prodigi v5 inválido (budget, standard, express, overnight)." },
       { status: 400 }
     );
   }
@@ -103,37 +75,53 @@ export async function POST(request: NextRequest) {
   }
 
   for (const it of items) {
-    if (!it?.sku || typeof it.sku !== "string" || !Number.isInteger(it.copies) || it.copies < 1 || it.copies > 500) {
+    const qty = typeof it?.quantity === "number" ? it.quantity : NaN;
+    if (!it?.sku || typeof it.sku !== "string" || !Number.isInteger(qty) || qty < 1 || qty > 500) {
       return NextResponse.json(
-        { ok: false, error: "Cada item deve incluir um SKU Prodigi válido e quantidade entre 1 e 500." },
+        { ok: false, error: "Cada item deve incluir SKU Prodigi válido e quantity entre 1 e 500." },
         { status: 400 }
       );
     }
   }
 
   const config = getProdigiConfigStatus();
-  if (!config.readyForSandboxRequests) {
+  if (!config.enabled || !config.apiKeyConfigured) {
     return NextResponse.json(
       {
         ok: false,
         configured: false,
+        apiVersion: "v5",
         sandboxOnly: true,
         error:
-          "A cotação Prodigi Sandbox encontra-se desativada neste ambiente. Nenhuma chamada externa foi efetuada.",
+          "A cotação Prodigi v5 Sandbox encontra-se desativada neste ambiente. Nenhuma chamada externa foi efetuada.",
       },
       { status: 503 }
+    );
+  }
+  if (config.environment !== "sandbox" || !config.sandboxKeyPrefixValid) {
+    return NextResponse.json(
+      {
+        ok: false,
+        apiVersion: "v5",
+        sandboxOnly: true,
+        error:
+          "O modo live da Prodigi está bloqueado. Utilize apenas uma chave sandbox_ em PRODIGI_ENV=sandbox.",
+      },
+      { status: 403 }
     );
   }
 
   const result = await createProdigiQuote({
     destinationCountryCode,
     shippingMethod,
-    currencyCode: typeof body.currencyCode === "string" ? body.currencyCode.trim().toUpperCase() : "EUR",
+    currencyCode:
+      typeof body.currencyCode === "string" ? body.currencyCode.trim().toUpperCase() : "EUR",
     items: items.map((it) => ({
       sku: it.sku.trim(),
-      copies: it.copies,
+      quantity: it.quantity,
       attributes: it.attributes,
-      assets: Array.isArray(it.assets) && it.assets.length > 0 ? it.assets : [{ printArea: "default" }],
+      assets:
+        Array.isArray(it.assets) && it.assets.length > 0 ? it.assets : [{ printArea: "default" }],
     })),
   });
 
@@ -144,5 +132,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  return NextResponse.json({ ok: true, environment: "sandbox", quote: result.data }, { status: 200 });
+  return NextResponse.json(
+    { ok: true, apiVersion: "v5", environment: "sandbox", quote: result.data },
+    { status: 200 }
+  );
 }

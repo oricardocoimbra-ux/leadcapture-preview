@@ -1,75 +1,71 @@
-# Preparação Técnica Prodigi (Print API v4 — Sandbox) & Decisões Pendentes para Placas QR
+# Preparação Técnica Prodigi (Print API v5 — Sandbox) & Decisões Pendentes para Placas QR
 
-> **Estado atual:** Scaffolding server-side pronto em modo **sandbox-only** e **desativado por defeito** (`PRODIGI_ENABLED=false`).  
-> **Restrições respeitadas:** Nenhum SKU, preço, porte, imposto ou prazo foi inventado; nenhuma encomenda real ou pagamento foi ativado; nenhuma chave foi guardada no código ou repositório; Stripe live, Production, DNS e base de dados não foram alterados.
+> **Estado atual:** Migrado para **Prodigi Print API v5** (versão oficial recomendada pela Prodigi para novas integrações), 100% **server-side**, **sandbox-only** e **desativado por defeito** (`PRODIGI_ENABLED=false`).  
+> **Restrições respeitadas:** Nenhum SKU foi inventado (apenas SKUs candidatos do catálogo público oficial Prodigi, com dados de Portugal/áreas/preços assinalados como **PENDENTE** até verificação na conta Sandbox); nenhuma encomenda real ou pagamento foi ativado; nenhuma chave foi guardada no código ou repositório; Stripe live, Production, DNS e base de dados não foram alterados.
 
 ---
 
-## 1. Arquitetura Prodigi Print API v4 Preparada (Server-Side · Sandbox)
+## 1. Migração de v4 para Prodigi Print API v5
 
-Baseada na documentação oficial da **Prodigi Print API v4**:
-- **Sandbox Base URL:** `https://api.sandbox.prodigi.com/v4.0`
-- **Autenticação:** cabeçalho HTTP `X-API-Key` enviado exclusivamente pelo servidor (`PRODIGI_API_KEY`).
-- **Bloqueio de segurança pré-lançamento:** o cliente [`src/lib/prodigi/client.ts`](../src/lib/prodigi/client.ts) está bloqueado a `sandbox` (`sandboxOnly: true`) e recusa qualquer chamada externa enquanto `PRODIGI_ENABLED !== "true"` ou sem `PRODIGI_API_KEY` (`HTTP 503`). O modo `live` devolve `HTTP 403` até aprovação explícita de lançamento.
+A revisão da documentação oficial atual da Prodigi confirmou que a **Print API v5** é a versão recomendada para novas integrações. A preparação foi migrada de v4 para v5 pelos seguintes motivos técnicos:
 
-### Ficheiros e endpoints isolados criados
-| Ficheiro | Método / Função | Papel | Estado por defeito |
+- **Base URL única:** `https://api.prodigi.com/v5` (sem subdomínios separados).
+- **Segurança por prefixo de chave (`X-API-Key`):** em v5, o ambiente é determinado pelo prefixo da chave (`sandbox_...` vs `live_...`). O cliente [`src/lib/prodigi/client.ts`](../src/lib/prodigi/client.ts) exige explicitamente `PRODIGI_ENV=sandbox` **e** `apiKey.startsWith("sandbox_")`, bloqueando (`403`) qualquer tentativa acidental com chave `live_`.
+- **Modelo *draft-first* (`POST /v5/orders`):** permite criar encomendas em rascunho (`submit: false` por defeito), validar custos/itens e só submeter (`submit: true`) quando pretendido.
+- **Schema v5 atualizado:** `POST /v5/quotes/order`, `quantity` (substitui `copies`), métodos de envio em minúsculas (`budget`, `standard`, `express`, `overnight`) e cabeçalho oficial `Idempotency-Key`.
+- **Webhooks v5 com assinatura HMAC:** subscrições configuradas no painel Prodigi com assinatura criptográfica sobre o corpo bruto (*raw body*), substituindo o `callbackUrl` simples de v4.
+
+### Ficheiros e endpoints isolados
+| Ficheiro | Método / Função | Proteções & Papel | Estado por defeito |
 | :--- | :--- | :--- | :--- |
-| `src/lib/prodigi/client.ts` | `getProdigiConfigStatus`, `getProdigiProduct`, `createProdigiQuote`, `createProdigiSandboxOrder`, `getProdigiOrder` | Cliente tipado v4 (`X-API-Key`, `idempotencyKey`, `callbackUrl`, `recipient`, `items`, `assets`) | **Desativado (`sandboxOnly`)** |
-| `src/app/api/prodigi/status/route.ts` | `GET /api/prodigi/status` | Diagnóstico apenas de leitura (booleans e ambiente; nunca expõe chaves) | Ativo (read-only) |
-| `src/app/api/prodigi/quote/route.ts` | `POST /api/prodigi/quote` | Validação de entrada + proxy para `POST /v4.0/quotes` em Sandbox (mesma origem + limite 12 KB em stream) | **Desativado (`503`)** |
-| `src/app/api/prodigi/orders/route.ts` | `POST /api/prodigi/orders` | Validação de morada/itens/assets HTTPS + proxy **exclusivamente Sandbox** para `POST /v4.0/orders` com `idempotencyKey` | **Desativado (`503`)** |
-| `src/app/api/webhooks/prodigi/route.ts` | `POST /api/webhooks/prodigi` | Recetor de callbacks de estado de encomenda Prodigi com validação timing-safe do token (`PRODIGI_WEBHOOK_SECRET`), sem escrita em base de dados | **Desativado (`503`)** |
+| `src/lib/prodigi/client.ts` | `getProdigiConfigStatus`, `getProdigiProduct`, `createProdigiQuote`, `createProdigiSandboxOrder`, `getProdigiOrder`, helpers de segurança | Cliente v5 (`https://api.prodigi.com/v5`), bloqueio estrito a `sandbox_`, `hasValidSameOrigin`, rate limit provisório, leitura em stream ≤ 12 KB, verificação HMAC | **Desativado (`sandboxOnly`)** |
+| `src/app/api/prodigi/status/route.ts` | `GET /api/prodigi/status` | Diagnóstico apenas de leitura (`apiVersion: "v5"`, flags booleanas; nunca expõe chaves) | Ativo (read-only) |
+| `src/app/api/prodigi/quote/route.ts` | `POST /api/prodigi/quote` | Rejeita pedidos sem `Origin`/`Referer` válido (`403`), rate limit provisório (`15 req / 10 min` por IP fiável), limite 12 KB em stream, proxy para `POST /v5/quotes/order` | **Desativado (`503`)** |
+| `src/app/api/prodigi/orders/route.ts` | `POST /api/prodigi/orders` | Rejeita pedidos sem `Origin`/`Referer` válido (`403`), rate limit provisório (`5 req / 10 min`), `Idempotency-Key` obrigatório fornecido pelo chamador, *draft-first* (`submit: false` por defeito), bloqueado a `sandbox_` | **Desativado (`503`)** |
+| `src/app/api/webhooks/prodigi/route.ts` | `POST /api/webhooks/prodigi` | **Sem segredos em query string**; verifica assinatura HMAC-SHA256 (`webhook-signature` / `x-prodigi-signature`) sobre o corpo bruto + janela de replay (`webhook-timestamp` ≤ 5 min), sem escrita em BD | **Desativado (`503`)** |
 
 ---
 
-## 2. Revisão do Catálogo, Carrinho e Checkout Atuais
+## 2. Segurança dos Endpoints & Estratégia de Idempotência
 
-A auditoria a [`src/data/catalog.ts`](../src/data/catalog.ts), [`src/lib/billing/cart-calculator.ts`](../src/lib/billing/cart-calculator.ts), [`src/app/checkout/page.tsx`](../src/app/checkout/page.tsx) e [`src/app/api/checkout/session/route.ts`](../src/app/api/checkout/session/route.ts) identificou os seguintes pontos a ligar numa fase seguinte (após validar SKUs e custos):
+### A. Segurança aplicada e requisitos pré-produção
+1. **Origem válida obrigatória (`hasValidSameOrigin`):** pedidos a `/api/prodigi/quote` e `/api/prodigi/orders` sem cabeçalho `Origin` nem `Referer` correspondente ao host atual são rejeitados com `403`.
+2. **Proteção contra abuso (provisória em memória):** rate limiting limitado (`Map` com teto de 500 IPs, extraindo IP via `x-vercel-forwarded-for` → `x-real-ip` → `cf-connecting-ip` → último IP de `x-forwarded-for`): `15 req / 10 min` em `/quote` e `5 req / 10 min` em `/orders`. **Antes de produção:** substituir por rate limit distribuído (ex.: Upstash/Redis) e exigir sessão autenticada/interna (orquestrada após pagamento Stripe confirmado) em `/api/prodigi/orders`.
+3. **Autenticação oficial de callbacks (`/api/webhooks/prodigi`):**
+   - Removido qualquer uso de segredo na query string (`?token=`).
+   - Implementada verificação HMAC-SHA256 sobre os bytes brutos do pedido (`webhook-signature` / `x-prodigi-signature` com `crypto.timingSafeEqual`, compatível com *Standard Webhooks* `v1,<base64>` e `sha256=<hex>`).
+   - **Pendente de confirmação no painel Prodigi v5:** confirmar o cabeçalho exato e o formato do segredo de assinatura gerados ao criar a subscrição de webhook na conta Prodigi Sandbox. Como alternativa sem webhook, o estado pode ser consultado diretamente por polling server-side via `GET /v5/orders/{orderId}`.
 
-1. **Catálogo (`src/data/catalog.ts` — categoria `qr-code-restauracao`):**
-   - Existem atualmente `qr-placa-mesa` (19 €), `qr-pack-5` (79 €), `qr-pack-10` (139 €) e `qr-design-placas` (49 €), todos marcados como serviços genéricos `one-time`.
-   - **Em falta no modelo de produto:** distinção explícita `fulfillmentType: "digital" | "physical-prodigi"`, mapeamento `prodigiSku` (após confirmação real no catálogo Prodigi para Portugal), dimensões/material e flags `requiresShippingAddress` / `requiresQrCustomization`.
-   - **Validação económica pendente:** os valores atualmente listados no catálogo **ainda não foram confrontados** com o custo real de produção Prodigi + portes para Portugal + IVA + margem.
-2. **Carrinho e Calculadora (`src/lib/billing/cart-calculator.ts`):**
-   - Calcula apenas subtotais digitais (único, mensal, anual) sem separação de portes de envio, sem país/código postal de destino e sem metadados de personalização por linha (URL do QR, título, acabamento, ficheiro de arte final).
-3. **Checkout (`src/app/checkout/page.tsx` e `src/app/api/checkout/session/route.ts`):**
-   - Recolhe atualmente apenas **morada de faturação** (`billingAddress` em texto livre), não uma **morada de entrega estruturada** exigida pela Prodigi (`line1`, `line2`, `townOrCity`, `postalOrZipCode`, `countryCode`).
-   - Ainda não integra cotação de envio (`POST /api/prodigi/quote`) nem gera/associa a arte final pronta para impressão antes de confirmar pagamento.
-   - A ligação entre pagamento confirmado (`payment_intent.succeeded` em `src/app/api/webhooks/stripe/route.ts`) e submissão automática à Prodigi só deve ser ativada **depois** de existir base de dados persistente de encomendas, idempotência e validação em amostra física.
+### B. Estratégia de Idempotência (Retries seguros sem bloquear compras futuras)
+- **Problema corrigido:** gerar um hash determinístico apenas sobre `{ merchantReference, items, postal }` podia bloquear compras futuras idênticas do mesmo cliente se o chamador omitisse a chave.
+- **Regra implementada:** `/api/prodigi/orders` **exige** que o chamador envie um `Idempotency-Key` único por **tentativa de compra/encomenda** (ex.: `order_<internalOrderId>_<paymentIntentId>` ou UUID gerado ao criar a encomenda interna, com 16–128 caracteres `[A-Za-z0-9_-]`), encaminhado no cabeçalho HTTP oficial `Idempotency-Key` da Prodigi v5.
+- **Resultado:**
+  - **Retries de rede da mesma encomenda** reutilizam a mesma `Idempotency-Key` → deduplicação garantida pela Prodigi (sem impressão duplicada).
+  - **Nova compra futura dos mesmos artigos pelo mesmo cliente** recebe uma nova `Idempotency-Key` única → nunca fica bloqueada.
 
 ---
 
-## 3. Decisões e Dados em Falta para Placas QR (Checklist Pré-Lançamento)
+## 3. Catálogo Oficial Prodigi — SKUs Candidatos a Placas QR & Dados Pendentes para Portugal
 
-Antes de ligar preços finais, UI de personalização ou encomendas reais, falta decidir e confirmar:
+Consulta ao catálogo público oficial da Prodigi (sem inventar valores não confirmados na conta):
 
-### A. Produtos disponíveis em Portugal & SKUs Prodigi
-- [ ] **SKUs oficiais Prodigi elegíveis para envio para Portugal (`PT`):** consultar `GET /v4.0/products/{sku}` no Sandbox após ativar a chave para confirmar exatamente quais os suportes disponíveis (ex.: blocos/placas acrílicas, placas de alumínio/metal, suportes de mesa ou cartões rígidos) e respetivos laboratórios de impressão (UE vs UK).
-- [ ] **Verificação de laboratório UE / alfândega:** confirmar se os SKUs escolhidos são produzidos na União Europeia (ou se têm envio DDP/IOSS) para evitar taxas alfandegárias inesperadas ao cliente em Portugal.
+| Categoria Candidata (Prodigi) | Material & Descrição Oficial | SKUs Candidatos Públicos (Catálogo Prodigi) | Tamanhos / Formatos Públicos | Áreas de Impressão (`printArea` / px / bleed) | Disponibilidade & Envio para Portugal (`PT`) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Acrylic Prisms** *(blocos de mesa independentes — principal candidato)* | Bloco de acrílico sólido com 1" (~25 mm) de espessura, arestas polidas a diamante, impressão Giclée (fundo completo ou transparente) | Prefixo `GLOBAL-MOU-PRISM`:<br>• `GLOBAL-MOU-PRISM-4X6`<br>• `GLOBAL-MOU-PRISM-6X6`<br>• `GLOBAL-MOU-PRISM-8X8`<br>• `GLOBAL-MOU-PRISM-5X5-TRANS`<br>• `GLOBAL-MOU-PRISM-5X7-TRANS` | `4×4"`, `5×5"`, `4×6"`, `5×7"`, `6×6"`, `6×8"`, `8×8"` *(confirmar códigos exatos de `4×4"` e `6×8"` via API)* | **PENDENTE** *(consultar `GET /v5/products/{sku}` na conta Sandbox)* | Catálogo indica produção em rede UE/UK/US; **PENDENTE** confirmar laboratório exato para `PT`, métodos (`budget`/`standard`/`express`/`overnight`), custos, IVA/alfândega e prazos via `POST /v5/quotes/order` |
+| **Gallery Boards with Wooden Stand** *(alternativa com base de carvalho)* | Cartão rígido de arte (Giclée) com suporte de mesa em carvalho maciço oleado (ou suportes avulso) | Prefixo `GLOBAL-BOARD` (ex.: `GLOBAL-BOARD-4X6-STAND-1`) + suportes `STAND-1` (base 9 cm) e `STAND-2` (base 16,5 cm; ranhura ~3 mm) | Ex.: `4×6"` *(confirmar todos os tamanhos com suporte via API)* | **PENDENTE** *(consultar `GET /v5/products/{sku}` na conta Sandbox)* | **PENDENTE** confirmar disponibilidade de envio para `PT`, custos, IVA e prazos via `POST /v5/quotes/order` |
+| **Metal Prints (Alumínio / Dibond)** | Painéis metálicos concebidos como arte de parede (subestrutura traseira suspensa) | *Não aplicável como placa de mesa padrão sem suporte externo* | — | — | Descartado para placas de mesa sem fornecedor de suporte compatível |
 
-### B. Materiais, formatos e acabamentos
-- [ ] **Material principal e alternativas:** ex. acrílico preto/transparente, alumínio escovado, PVC rígido ou madeira com base de mesa.
-- [ ] **Dimensões exatas e orientação:** ex. A6 (`105×148 mm`), A5 (`148×210 mm`), quadrado (`100×100 mm` / `150×150 mm`), incluindo se o suporte/base de mesa vem incluído no SKU Prodigi ou exige fornecedor separado.
-- [ ] **Acabamento e identidade:** mate vs brilho, paleta preto e dourado, e especificação exata de `printArea`, DPI mínimo (300 DPI) e margem de corte (*bleed*) devolvidos pelo endpoint `/products/{sku}`.
+---
 
-### C. Quantidades e política comercial
-- [ ] **Quantidades mínimas e escalões:** venda à unidade (1) vs packs (5, 10, 20+) — confirmar se a Prodigi aplica desconto por volume no mesmo SKU ou se o pack corresponde a `copies: 5` / `copies: 10`.
-- [ ] **Custos totais, IVA e margens:** executar `POST /v4.0/quotes` em Sandbox para `PT` com `copies: 1, 5, 10`, somar custo unitário + portes + IVA aplicável + margem comercial LeadCapture antes de aprovar os preços finais ao público.
+## 4. Revisão do Catálogo, Carrinho e Checkout + Pendências Pré-Lançamento
 
-### D. Envio, prazos e devoluções
-- [ ] **Métodos de envio a oferecer:** definir se o cliente escolhe entre `Budget`, `Standard` e `Express`, e se os portes são calculados dinamicamente via `/api/prodigi/quote` ou por escalão fixo validado.
-- [ ] **Prazos reais de produção e entrega para Portugal:** validar tempos de produção + trânsito real (nunca publicar prazos estimados sem teste real).
-- [ ] **Política de devoluções e reimpressões:** redigir cláusula específica para **produtos personalizados** (exceção legal ao direito de livre resolução em bens feitos sob medida) combinada com garantia de reimpressão/substituição em caso de defeito de impressão ou dano no transporte.
-
-### E. Arte final pronta para impressão e amostra física
-- [ ] **Pipeline de geração da arte final:** definir como será gerado o ficheiro de alta resolução (PNG/PDF 300 DPI com QR Code de alto contraste + nome/logo do cliente) e onde ficará alojado em URL HTTPS pública acessível à Prodigi.
-- [ ] **Teste em amostra física:** encomendar pelo menos uma amostra física real antes do lançamento para validar qualidade do material, contraste, durabilidade e leitura instantânea do QR Code em iOS/Android sob iluminação de restaurante.
-
-### F. Credenciais necessárias apenas para testar o Sandbox (sem partilhar no chat)
-- [ ] Criar conta **Prodigi Sandbox** e gerar uma `PRODIGI_API_KEY` de sandbox.
-- [ ] Configurar exclusivamente no ambiente **Preview** da Vercel (nunca em Production):
-  - `PRODIGI_ENABLED=true`
-  - `PRODIGI_ENV=sandbox`
-  - `PRODIGI_API_KEY=<chave sandbox>`
-  - `PRODIGI_WEBHOOK_SECRET=<segredo aleatório>` *(opcional, para testar `/api/webhooks/prodigi`)*
+1. **Lacunas no catálogo/checkout atuais (`src/data/catalog.ts`, `src/lib/billing/cart-calculator.ts`, `src/app/checkout/page.tsx`):**
+   - Os itens `qr-placa-mesa`, `qr-pack-5`, `qr-pack-10` e `qr-design-placas` não têm ainda `fulfillmentType: "physical-prodigi"`, mapeamento `prodigiSku` validado nem validação de margem face a custos reais Prodigi.
+   - O checkout recolhe apenas morada de faturação em texto livre — falta morada de entrega estruturada (`line1`, `townOrCity`, `postalOrZipCode`, `countryCode`), cotação de portes e personalização da arte final QR por linha.
+2. **Checklist pendente antes de ativar Sandbox / Produção:**
+   - [ ] Criar conta **Prodigi Sandbox** e configurar apenas em **Preview** na Vercel: `PRODIGI_ENABLED=true`, `PRODIGI_ENV=sandbox`, `PRODIGI_API_KEY=sandbox_...` e `PRODIGI_WEBHOOK_SECRET=...`.
+   - [ ] Consultar `GET /v5/products/{sku}` para os SKUs candidatos acima e preencher `printArea`, resolução (px / 300 DPI) e *bleed*.
+   - [ ] Executar `POST /v5/quotes/order` com destino `PT` (`copies/quantity` = 1, 5, 10) para confirmar custos unitários, portes (`budget`/`standard`/`express`), IVA/IOSS, laboratório UE e prazos reais.
+   - [ ] Confirmar no painel Prodigi v5 o cabeçalho exato de assinatura de webhook (ou adotar polling `GET /v5/orders/{id}`).
+   - [ ] Validar pipeline de geração de arte final (PNG/PDF 300 DPI em URL HTTPS pública) e encomendar **amostra física real** para testar leitura do QR Code.
+   - [ ] Definir política de devoluções/reimpressões para produtos personalizados e aprovar preços finais antes de qualquer ativação em produção.
