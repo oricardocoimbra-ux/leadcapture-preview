@@ -94,7 +94,11 @@ export async function POST(request: NextRequest) {
   }
   if (!ALLOWED_PRODIGI_SHIPPING_METHODS.includes(shippingMethod)) {
     return NextResponse.json(
-      { ok: false, error: "Método de envio Prodigi v5 inválido (budget, standard, express, overnight)." },
+      {
+        ok: false,
+        error:
+          "Método de envio Prodigi v5 inválido (budget, standard, standardplus, express, overnight).",
+      },
       { status: 400 }
     );
   }

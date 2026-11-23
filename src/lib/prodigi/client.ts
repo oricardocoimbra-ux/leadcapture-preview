@@ -1,4 +1,3 @@
-import crypto from "node:crypto";
 import type { NextRequest } from "next/server";
 
 /**
@@ -10,6 +9,7 @@ import type { NextRequest } from "next/server";
  * - Draft-first order lifecycle: POST /v5/orders (submit defaults to false)
  * - Quoting endpoint: POST /v5/quotes/order
  * - Idempotency: passed via `Idempotency-Key` HTTP header per purchase attempt
+ * - Order status tracking: server-side polling via GET /v5/orders/{id} (v5 does not support webhook subscriptions)
  *
  * Security & Launch Guardrails:
  * - Strictly server-only (never import in "use client" components).
@@ -20,11 +20,17 @@ import type { NextRequest } from "next/server";
 export const PRODIGI_V5_BASE_URL = "https://api.prodigi.com/v5";
 
 export type ProdigiEnvironment = "sandbox" | "live";
-export type ProdigiShippingMethod = "budget" | "standard" | "express" | "overnight";
+export type ProdigiShippingMethod =
+  | "budget"
+  | "standard"
+  | "standardplus"
+  | "express"
+  | "overnight";
 
 export const ALLOWED_PRODIGI_SHIPPING_METHODS: ProdigiShippingMethod[] = [
   "budget",
   "standard",
+  "standardplus",
   "express",
   "overnight",
 ];
@@ -110,7 +116,6 @@ export interface ProdigiConfigStatus {
   sandboxOnly: boolean;
   apiKeyConfigured: boolean;
   sandboxKeyPrefixValid: boolean;
-  webhookSecretConfigured: boolean;
   readyForSandboxRequests: boolean;
 }
 
@@ -128,7 +133,6 @@ export function getProdigiConfigStatus(): ProdigiConfigStatus {
   const apiKey = process.env.PRODIGI_API_KEY?.trim() || "";
   const apiKeyConfigured = Boolean(apiKey);
   const sandboxKeyPrefixValid = apiKey.startsWith("sandbox_");
-  const webhookSecretConfigured = Boolean(process.env.PRODIGI_WEBHOOK_SECRET?.trim());
   const sandboxOnly = true; // Hard-locked to sandbox until explicit owner pre-launch approval
 
   return {
@@ -139,7 +143,6 @@ export function getProdigiConfigStatus(): ProdigiConfigStatus {
     sandboxOnly,
     apiKeyConfigured,
     sandboxKeyPrefixValid,
-    webhookSecretConfigured,
     readyForSandboxRequests:
       enabled && apiKeyConfigured && sandboxKeyPrefixValid && environment === "sandbox",
   };
@@ -411,42 +414,4 @@ export async function readJsonWithByteCap(
   } catch {
     return { ok: false, status: 400, error: "JSON inválido." };
   }
-}
-
-export function verifyHmacSignature(
-  rawBody: string,
-  secret: string,
-  signatureHeader: string,
-  webhookId?: string | null,
-  webhookTimestamp?: string | null
-): boolean {
-  const cleanSig = signatureHeader.trim();
-  if (!cleanSig) return false;
-
-  // Support both Standard Webhooks format (`v1,<base64>` signed over `${id}.${timestamp}.${rawBody}`)
-  // and hex/base64 HMAC-SHA256 over rawBody directly.
-  if (webhookId && webhookTimestamp && cleanSig.includes("v1,")) {
-    const signedContent = `${webhookId}.${webhookTimestamp}.${rawBody}`;
-    const expectedBase64 = crypto
-      .createHmac("sha256", secret)
-      .update(signedContent, "utf8")
-      .digest("base64");
-    const candidates = cleanSig
-      .split(/\s+/)
-      .filter((part) => part.startsWith("v1,"))
-      .map((part) => part.slice(3));
-    return candidates.some((candidate) => timingSafeEqualStr(candidate, expectedBase64));
-  }
-
-  const normalized = cleanSig.startsWith("sha256=") ? cleanSig.slice(7) : cleanSig;
-  const expectedHex = crypto.createHmac("sha256", secret).update(rawBody, "utf8").digest("hex");
-  const expectedB64 = crypto.createHmac("sha256", secret).update(rawBody, "utf8").digest("base64");
-  return timingSafeEqualStr(normalized, expectedHex) || timingSafeEqualStr(normalized, expectedB64);
-}
-
-function timingSafeEqualStr(a: string, b: string): boolean {
-  const aBuf = Buffer.from(a);
-  const bBuf = Buffer.from(b);
-  if (aBuf.length !== bBuf.length) return false;
-  return crypto.timingSafeEqual(aBuf, bBuf);
 }
