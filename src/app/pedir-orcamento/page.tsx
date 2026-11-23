@@ -13,6 +13,25 @@ type QuoteErrors = Partial<
   Record<"name" | "email" | "phone" | "sector" | "description", string>
 >;
 
+const SPECIALIZED_QUOTE_SERVICES = [
+  {
+    slug: "solucoes-a-medida",
+    name: "Soluções Digitais à Medida (Apps, Automatizações & Integrações)",
+  },
+  {
+    slug: "marca-propria",
+    name: "Produtos de Marca Própria (Conceito, Embalagem & Coordenação)",
+  },
+  {
+    slug: "apoio-inpi",
+    name: "Apoio Administrativo a Pedido de Marca no INPI",
+  },
+  {
+    slug: "conteudo-imobiliario",
+    name: "Conteúdo Imobiliário (Vídeos de Fotos & Melhoria Fotográfica)",
+  },
+] as const;
+
 export default function PedirOrcamentoPage() {
   const formStartedAtRef = useRef<number>(Date.now());
   const [name, setName] = useState("");
@@ -39,8 +58,15 @@ export default function PedirOrcamentoPage() {
     if (setorParam && SECTORS.some((s) => s.slug === setorParam)) {
       setSector(setorParam);
     }
-    if (servicoParam && SERVICES.some((s) => s.slug === servicoParam)) {
+    const isKnownService =
+      Boolean(servicoParam) &&
+      (SERVICES.some((s) => s.slug === servicoParam) ||
+        SPECIALIZED_QUOTE_SERVICES.some((s) => s.slug === servicoParam));
+    if (servicoParam && isKnownService) {
       setSelectedServices((prev) => (prev.includes(servicoParam) ? prev : [...prev, servicoParam]));
+      if (servicoParam === "solucoes-a-medida") {
+        setProjectType("a-medida");
+      }
     }
   }, []);
 
@@ -343,11 +369,12 @@ export default function PedirOrcamentoPage() {
                       <option value="novo">Novo Projeto</option>
                       <option value="redesign">Melhoria / Redesign</option>
                       <option value="sistema-360">Ecossistema 360° Completo</option>
+                      <option value="a-medida">Projeto à Medida / Personalizado</option>
                     </select>
                   </div>
                 </div>
 
-                <fieldset>
+                <fieldset className="space-y-3">
                   <legend className="block text-xs font-semibold text-zinc-200 mb-2">
                     Serviços de interesse <span className="text-zinc-500">(pode escolher vários)</span>
                   </legend>
@@ -375,6 +402,37 @@ export default function PedirOrcamentoPage() {
                         </label>
                       );
                     })}
+                  </div>
+
+                  <div className="pt-2">
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-[#F5B800] mb-2">
+                      Ofertas Especializadas & Complementares
+                    </p>
+                    <div className="grid sm:grid-cols-2 gap-2.5">
+                      {SPECIALIZED_QUOTE_SERVICES.map((srv) => {
+                        const checked = selectedServices.includes(srv.slug);
+                        return (
+                          <label
+                            key={srv.slug}
+                            htmlFor={`quote-srv-${srv.slug}`}
+                            className={`flex items-start gap-2.5 p-3 rounded-xl bg-[#0a0b0e] border text-xs text-zinc-200 cursor-pointer transition-colors ${
+                              checked
+                                ? "border-amber-500/60 bg-amber-500/5"
+                                : "border-white/10 hover:border-amber-500/40"
+                            }`}
+                          >
+                            <input
+                              id={`quote-srv-${srv.slug}`}
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() => toggleService(srv.slug)}
+                              className="accent-[#F5B800] mt-0.5 shrink-0"
+                            />
+                            <span className="leading-snug">{srv.name}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
                   </div>
                 </fieldset>
 

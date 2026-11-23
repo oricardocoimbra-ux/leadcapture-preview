@@ -69,3 +69,22 @@ Estas hipóteses são referências iniciais para discutir, não preços comercia
 - **Autenticação (`/login`, `/registar`, `/recuperar-password`):** confirmar projeto Supabase dedicado e credenciais OAuth 2.0 no Google Cloud Console (ver `documentation/auth-architecture.md`) apenas quando a Área de Cliente for ativada.
 - **Checkout (`/checkout`):** manter em modo de teste até validação comercial/fiscal de preços, IVA, contratos e itens elegíveis; nunca usar chaves Stripe live antes de aprovação explícita.
 
+## Estado de implementação em Preview e bloqueios reais (2026-11-23)
+
+### Concluído em Preview (sem credenciais live nem alterações a Production/DNS/BD)
+- **Ofertas comerciais publicadas sem preços não aprovados e ligadas ao percurso de orçamento (`/pedir-orcamento?servico=...`):**
+  - Soluções digitais à medida em `/solucoes#solucoes-a-medida` (`?servico=solucoes-a-medida`).
+  - Apoio administrativo a pedidos de marca no INPI (separado) em `/solucoes#apoio-marca-inpi` (`?servico=apoio-inpi`).
+  - Produtos de marca própria em `/por-negocio/beleza-estetica#marca-propria` (`?servico=marca-propria&setor=beleza-estetica`).
+  - Conteúdo imobiliário em `/por-negocio/imobiliario#conteudo-imobiliario` (`?servico=conteudo-imobiliario&setor=imobiliario`), assinalando exemplos reais como pendentes de materiais autorizados.
+- **Auditoria de ligações comerciais:** todas as rotas e CTAs comerciais internos validados sem links mortos nem páginas inexistentes.
+- **Prodigi Print API v5 (Sandbox-only, `PRODIGI_ENABLED=false`):** cliente server-side, `/api/prodigi/status`, `/api/prodigi/quote` e `/api/prodigi/orders` prontos e documentados em `documentation/prodigi-integration-plan.md`.
+- **Formulários & Cloudflare Turnstile:** validação ponta a ponta confirmada em Preview (`Turnstile` ativo e envio Brevo desligado por defeito).
+
+### Bloqueios reais que dependem de validação do proprietário ou fatores externos
+1. **Ronda visual (15/38 assets em falta):** servidor Google `gemini-3.1-flash-image` em `503 MODEL_CAPACITY_EXHAUSTED` (ou entrega externa dos 15 ficheiros).
+2. **Materiais e autorizações comerciais:** exemplos reais de vídeo/antes-depois imobiliário, autorizações de marcas/logótipos (incluindo eventual caso Century 21) e validação jurídica/RGPD/Banco de Portugal para reativação de carteira.
+3. **Validação comercial & regulamentar:** preços finais e IVA, fornecedores/CPNP/Pessoa Responsável UE para marca própria, tabela de honorários/parceria AOPI para INPI, e SKUs/portes/amostra física Prodigi em Portugal (requer `PRODIGI_API_KEY=sandbox_...` em Preview).
+4. **Ativação controlada de integrações (Preview primeiro):** `BREVO_API_KEY` + `FORMS_ENABLED=true` (e rotação recomendada da Secret Key do Turnstile), Supabase Auth/BD, páginas legais e Stripe live apenas após aprovação explícita.
+
+

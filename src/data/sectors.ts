@@ -194,11 +194,11 @@ export const SECTORS: SectorItem[] = [
           iconName: "Target",
         },
       ],
-      disclaimerTitle: "Direitos de imagem e enquadramento",
+      disclaimerTitle: "Direitos de imagem, exemplos reais e enquadramento",
       disclaimerText:
-        "Todos os conteúdos são produzidos exclusivamente com fotografias e materiais autorizados. Animações aéreas ou de mapa avançam apenas quando os direitos comerciais de utilização estejam confirmados. O âmbito e orçamento são definidos caso a caso.",
+        "Todos os conteúdos são produzidos exclusivamente com fotografias e materiais autorizados. Animações aéreas ou de mapa avançam apenas quando os direitos comerciais de utilização estejam confirmados. Exemplos reais de vídeo e comparações antes/depois encontram-se pendentes de materiais autorizados para publicação. O âmbito e orçamento são definidos caso a caso.",
       ctaLabel: "Pedir Orçamento de Conteúdo",
-      ctaHref: "/pedir-orcamento?setor=imobiliario",
+      ctaHref: "/pedir-orcamento?servico=conteudo-imobiliario&setor=imobiliario",
       secondaryCtaLabel: "Falar com a Equipa",
       secondaryCtaHref: "/contactos",
     },
@@ -349,7 +349,7 @@ export const SECTORS: SectorItem[] = [
       disclaimerText:
         "A LeadCapture apoia o conceito, identidade, embalagem, seleção de fabricante e coordenação da produção — não fabrica, não formula nem certifica produtos. O fabrico, a formulação, a avaliação de segurança, a rotulagem legal e a conformidade regulamentar (incluindo notificação CPNP e Pessoa Responsável na UE) cabem exclusivamente ao fabricante e às entidades legalmente competentes. O âmbito e orçamento são definidos após avaliação do projeto.",
       ctaLabel: "Pedir Orçamento de Marca Própria",
-      ctaHref: "/pedir-orcamento?setor=beleza-estetica",
+      ctaHref: "/pedir-orcamento?servico=marca-propria&setor=beleza-estetica",
       secondaryCtaLabel: "Apoio Administrativo INPI",
       secondaryCtaHref: "/solucoes#apoio-marca-inpi",
     },

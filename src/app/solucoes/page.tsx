@@ -153,7 +153,7 @@ export default function SolucoesPage() {
                   </p>
                   <div className="pt-1">
                     <Link
-                      href="/pedir-orcamento"
+                      href="/pedir-orcamento?servico=solucoes-a-medida"
                       className="lc-btn-primary w-full py-3 px-5 inline-flex items-center justify-center gap-2 text-sm"
                     >
                       Pedir Orçamento à Medida
@@ -210,7 +210,7 @@ export default function SolucoesPage() {
 
                 <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
                   <Link
-                    href="/pedir-orcamento"
+                    href="/pedir-orcamento?servico=apoio-inpi"
                     className="lc-btn-secondary px-5 py-3 inline-flex items-center justify-center gap-2 text-sm"
                   >
                     Pedir Informações
