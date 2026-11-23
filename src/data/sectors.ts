@@ -18,6 +18,24 @@ export interface SectorPhonePreview {
   checklist: string[];
 }
 
+export interface SectorSpecialOffer {
+  id: string;
+  badge: string;
+  title: string;
+  subtitle: string;
+  items: {
+    title: string;
+    description: string;
+    iconName: string;
+  }[];
+  disclaimerTitle: string;
+  disclaimerText: string;
+  ctaLabel: string;
+  ctaHref: string;
+  secondaryCtaLabel?: string;
+  secondaryCtaHref?: string;
+}
+
 export interface SectorItem {
   id: number;
   slug: string;
@@ -35,6 +53,7 @@ export interface SectorItem {
   servicesTitle: string;
   servicesSubtitle: string;
   services: SectorServiceItem[];
+  specialOffer?: SectorSpecialOffer;
   packageBadge: string;
   packageTitle: string;
   packageBenefits: string[];
@@ -143,6 +162,46 @@ export const SECTORS: SectorItem[] = [
         visualType: "integrations",
       },
     ],
+    specialOffer: {
+      id: "conteudo-imobiliario",
+      badge: "CONTEÚDO IMOBILIÁRIO",
+      title: "Conteúdo audiovisual para valorizar cada imóvel",
+      subtitle:
+        "Produção e edição de conteúdos digitais a partir de materiais fornecidos e autorizados pelo consultor ou agência, prontos para destacar angariações nos canais digitais.",
+      items: [
+        {
+          title: "Vídeos a partir de fotografias autorizadas",
+          description:
+            "Criação de vídeos fluidos de apresentação a partir de fotografias próprias ou expressamente autorizadas pelo cliente.",
+          iconName: "Camera",
+        },
+        {
+          title: "Vídeos curtos para redes sociais",
+          description:
+            "Formatos verticais e dinâmicos preparados para divulgação em Instagram Reels, TikTok e anúncios imobiliários.",
+          iconName: "Smartphone",
+        },
+        {
+          title: "Melhoria de fotografias",
+          description:
+            "Ajustes de iluminação, cor, nitidez e enquadramento para reforçar a apresentação visual sem descaracterizar o imóvel.",
+          iconName: "Sparkles",
+        },
+        {
+          title: "Animações aéreas e de mapa",
+          description:
+            "Enquadramento aéreo ou de mapa disponibilizado apenas após confirmação prévia dos direitos comerciais e licenciamento das fontes utilizadas.",
+          iconName: "Target",
+        },
+      ],
+      disclaimerTitle: "Direitos de imagem e enquadramento",
+      disclaimerText:
+        "Todos os conteúdos são produzidos exclusivamente com fotografias e materiais autorizados. Animações aéreas ou de mapa avançam apenas quando os direitos comerciais de utilização estejam confirmados. O âmbito e orçamento são definidos caso a caso.",
+      ctaLabel: "Pedir Orçamento de Conteúdo",
+      ctaHref: "/pedir-orcamento?setor=imobiliario",
+      secondaryCtaLabel: "Falar com a Equipa",
+      secondaryCtaHref: "/contactos",
+    },
     packageBadge: "PACOTE IMOBILIÁRIO 360°",
     packageTitle: "Tudo o que precisa para crescer no setor imobiliário.",
     packageBenefits: [
@@ -254,6 +313,46 @@ export const SECTORS: SectorItem[] = [
         visualType: "integrations",
       },
     ],
+    specialOffer: {
+      id: "marca-propria",
+      badge: "OFERTA COMPLEMENTAR · MARCA PRÓPRIA",
+      title: "Produtos de marca própria para o seu espaço de beleza",
+      subtitle:
+        "Apoiamos salões, clínicas de estética e estúdios que pretendem desenvolver uma linha própria (como perfumes, cuidados capilares ou cuidado pessoal), do conceito à coordenação da produção.",
+      items: [
+        {
+          title: "Conceito da linha",
+          description:
+            "Apoio na definição da proposta de valor, posicionamento e alinhamento com o perfil dos clientes do espaço.",
+          iconName: "Sparkles",
+        },
+        {
+          title: "Identidade e embalagem",
+          description:
+            "Criação da identidade visual da marca, design de rótulos e apresentação gráfica das embalagens.",
+          iconName: "Palette",
+        },
+        {
+          title: "Seleção de fabricante",
+          description:
+            "Apoio na identificação e avaliação de fabricantes e parceiros produtivos adequados ao tipo de produto.",
+          iconName: "Handshake",
+        },
+        {
+          title: "Coordenação da produção",
+          description:
+            "Acompanhamento operacional entre design, amostras, prazos e encomenda junto do fabricante escolhido.",
+          iconName: "Package",
+        },
+      ],
+      disclaimerTitle: "Papel da LeadCapture e responsabilidades regulamentares",
+      disclaimerText:
+        "A LeadCapture apoia o conceito, identidade, embalagem, seleção de fabricante e coordenação da produção — não fabrica, não formula nem certifica produtos. O fabrico, a formulação, a avaliação de segurança, a rotulagem legal e a conformidade regulamentar (incluindo notificação CPNP e Pessoa Responsável na UE) cabem exclusivamente ao fabricante e às entidades legalmente competentes. O âmbito e orçamento são definidos após avaliação do projeto.",
+      ctaLabel: "Pedir Orçamento de Marca Própria",
+      ctaHref: "/pedir-orcamento?setor=beleza-estetica",
+      secondaryCtaLabel: "Apoio Administrativo INPI",
+      secondaryCtaHref: "/solucoes#apoio-marca-inpi",
+    },
     packageBadge: "PACOTE BELEZA 360°",
     packageTitle: "Tudo o que o seu negócio de beleza precisa, num só lugar.",
     packageBenefits: [

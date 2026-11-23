@@ -314,6 +314,80 @@ export function SectorPageTemplate({ sector }: { sector: SectorItem }) {
         </div>
       </section>
 
+      {/* Sector Special Offer (when applicable, e.g., Marca Própria in Beleza, Conteúdo Imobiliário in Imobiliário) */}
+      {sector.specialOffer && (
+        <section
+          id={sector.specialOffer.id}
+          className="py-14 px-4 sm:px-6 lg:px-8 border-t border-white/5"
+          aria-labelledby={`${sector.specialOffer.id}-heading`}
+        >
+          <div className="max-w-7xl mx-auto lc-card rounded-3xl p-6 sm:p-10 space-y-8">
+            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+              <div className="max-w-3xl space-y-3">
+                <span className="text-xs font-bold tracking-widest uppercase text-[#F5B800]">
+                  {sector.specialOffer.badge}
+                </span>
+                <h2
+                  id={`${sector.specialOffer.id}-heading`}
+                  className="text-2xl sm:text-3xl font-extrabold text-white"
+                >
+                  {sector.specialOffer.title}
+                </h2>
+                <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
+                  {sector.specialOffer.subtitle}
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+                <Link
+                  href={sector.specialOffer.ctaHref}
+                  className="lc-btn-primary px-5 py-3 inline-flex items-center justify-center gap-2 text-sm"
+                >
+                  {sector.specialOffer.ctaLabel}
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                {sector.specialOffer.secondaryCtaLabel && sector.specialOffer.secondaryCtaHref && (
+                  <Link
+                    href={sector.specialOffer.secondaryCtaHref}
+                    className="lc-btn-secondary px-5 py-3 inline-flex items-center justify-center gap-2 text-sm"
+                  >
+                    {sector.specialOffer.secondaryCtaLabel}
+                  </Link>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {sector.specialOffer.items.map((item) => (
+                <div
+                  key={item.title}
+                  className="rounded-2xl border border-white/10 bg-[#0a0b0e]/85 p-5 space-y-2.5"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-[#161922] border border-amber-500/25 flex items-center justify-center">
+                    <DynamicIcon name={item.iconName} className="w-5 h-5 text-[#F5B800]" />
+                  </div>
+                  <h3 className="text-base font-bold text-white">{item.title}</h3>
+                  <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className="rounded-2xl border border-amber-500/25 bg-[#0a0b0e]/90 p-5 flex items-start gap-3">
+              <DynamicIcon name="ShieldCheck" className="w-5 h-5 text-[#F5B800] shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <p className="text-xs sm:text-sm font-bold text-white">
+                  {sector.specialOffer.disclaimerTitle}
+                </p>
+                <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+                  {sector.specialOffer.disclaimerText}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Pacote 360° */}
       <section className="py-14 px-4 sm:px-6 lg:px-8">
         <div className="relative max-w-6xl mx-auto lc-card-featured rounded-3xl overflow-hidden p-8 sm:p-10">

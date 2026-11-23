@@ -71,7 +71,7 @@ Das 8 imagens atualmente em `public/images/production/saude-bem-estar/`:
 
 | Bloco | Uso | Tipo | Ficheiro (`public/images/production/`) | Proporção | Estado |
 | :--- | :--- | :--- | :--- | :-: | :--- |
-| `03 Website` (portátil neutro) | Card *Website Profissional* (5 setores) + `/solucoes/websites` | Imagem genérica reutilizável + HTML/CSS | `reutilizaveis/website-portatil.jpg` | `16:9` | **em falta** |
+| `03 Website` (portátil neutro) | Card *Website Profissional* (5 setores) + `/solucoes/websites` + `/solucoes` + `/demonstracoes` | Imagem genérica reutilizável + HTML/CSS | `reutilizaveis/website-portatil.jpg` | `16:9` | **concluído** |
 | `04 Agendamento / Reservas` | Card *Agendamento / Reservas* (todos os setores aplicáveis) | Imagem genérica reutilizável + HTML/CSS | `saude-bem-estar/servico-agendamento-online.jpg` | `16:9` | **concluído** |
 | `05 CRM / Gestão` | Card *CRM* (setores aplicáveis) + `/solucoes/crm-sistemas` | Imagem genérica reutilizável + HTML/CSS | `saude-bem-estar/servico-crm-gestao.jpg` | `16:9` | **concluído** |
 | `06 Automação / Notificações` | Card *Automação* (setores aplicáveis) + `/solucoes/automacao-ia` | Imagem genérica reutilizável + HTML/CSS | `saude-bem-estar/servico-automacao-lembrete.jpg` | `16:9` | **concluído** |
@@ -91,42 +91,42 @@ Das 8 imagens atualmente em `public/images/production/saude-bem-estar/`:
 
 #### 2. Imobiliário (`/por-negocio/imobiliario` — `REF-23`)
 - `01 Hero`: `imobiliario/hero-imobiliario.jpg` (`16:9`) — **concluído** (dedicada)
-- `02 Smartphone`: `imobiliario/smartphone-imobiliario.jpg` (`3:4`) — **em falta** *(reutiliza `hero-imobiliario.jpg` temporariamente)*
-- `03 Website Imobiliário`: `reutilizaveis/website-portatil.jpg` (`16:9`) + overlay HTML/CSS — **em falta** *(reutiliza `hero-imobiliario.jpg` temporariamente)*
+- `02 Smartphone`: `imobiliario/smartphone-imobiliario.jpg` (`3:4`) — **concluído** (dedicada)
+- `03 Website Imobiliário`: `reutilizaveis/website-portatil.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
 - `04 Agendamento de Visitas`: `saude-bem-estar/servico-agendamento-online.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
 - `05 CRM de Leads`: `saude-bem-estar/servico-crm-gestao.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
 - `06 Automação & Follow-up`: `saude-bem-estar/servico-automacao-lembrete.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
-- `07 Conteúdo Imobiliário`: `imobiliario/conteudo-imobiliario.jpg` (`16:9`) — **em falta** *(reutiliza `hero-imobiliario.jpg` temporariamente)*
-- `08 Pacote Imobiliário 360°`: `imobiliario/pacote-imobiliario.jpg` (`16:9`) — **em falta** *(reutiliza `hero-imobiliario.jpg` temporariamente)*
+- `07 Conteúdo Imobiliário`: `imobiliario/conteudo-imobiliario.jpg` (`16:9`) — **concluído** (dedicada)
+- `08 Pacote Imobiliário 360°`: `imobiliario/pacote-imobiliario.jpg` (`16:9`) — **concluído** (dedicada)
 - *Campanhas / Relatórios / Integrações*: **Composição HTML/CSS** — **concluído**
 
 #### 3. Beleza e Estética (`/por-negocio/beleza-estetica` — `REF-16`)
-- `01 Hero`: `beleza-estetica/hero-beleza.jpg` (`16:9`) — **em falta** (dedicada)
-- `02 Smartphone`: `beleza-estetica/smartphone-beleza.jpg` (`3:4`) — **em falta** (dedicada)
-- `03 Website Profissional`: `reutilizaveis/website-portatil.jpg` (`16:9`) + overlay HTML/CSS — **em falta** (reutilizável)
-- `04 Agendamento Online`: `saude-bem-estar/servico-agendamento-online.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
-- `05 Gestão de Clientes (CRM)`: `saude-bem-estar/servico-crm-gestao.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
-- `06 Automação & Comunicação`: `saude-bem-estar/servico-automacao-lembrete.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
-- `07 Conteúdo & Redes Sociais`: `beleza-estetica/conteudo-beleza.jpg` (`16:9`) — **em falta** (dedicada)
-- `08 Pacote Beleza 360°`: `beleza-estetica/pacote-beleza.jpg` (`16:9`) — **em falta** (dedicada)
-- *Campanhas / Relatórios / Integrações*: **Composição HTML/CSS** — **pendente de ligação**
+- `01 Hero`: `beleza-estetica/hero-beleza.jpg` (`16:9`) — **concluído** (dedicada)
+- `02 Smartphone`: `beleza-estetica/smartphone-beleza.jpg` (`3:4`) — **concluído** (dedicada)
+- `03 Website Profissional`: `reutilizaveis/website-portatil.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
+- `04 Agendamento Online`: `saude-bem-estar/servico-agendamento-online.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
+- `05 Gestão de Clientes (CRM)`: `saude-bem-estar/servico-crm-gestao.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
+- `06 Automação & Comunicação`: `saude-bem-estar/servico-automacao-lembrete.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
+- `07 Conteúdo & Redes Sociais`: `beleza-estetica/conteudo-beleza.jpg` (`16:9`) — **concluído** (dedicada)
+- `08 Pacote Beleza 360°`: `beleza-estetica/pacote-beleza.jpg` (`16:9`) — **concluído** (dedicada)
+- *Campanhas / Relatórios / Integrações*: **Composição HTML/CSS** — **concluído**
 
 #### 4. Restauração (`/por-negocio/restauracao` — `REF-42`)
-- `01 Hero`: `restauracao/hero-restauracao.jpg` (`16:9`) — **em falta** (dedicada)
-- `02 Smartphone (Menu Digital)`: `restauracao/smartphone-restauracao.jpg` (`3:4`) — **em falta** (dedicada)
-- `03 Website Profissional`: `reutilizaveis/website-portatil.jpg` (`16:9`) + overlay HTML/CSS — **em falta** (reutilizável)
-- `04 Menu Digital (QR Code)`: `servicos/qr-code-hero.jpg` (`16:9`) + overlay HTML/CSS — **em falta** (reutilizável do serviço QR)
-- `05 Reservas Online`: `saude-bem-estar/servico-agendamento-online.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
-- `06 Encomendas & Takeaway`: `restauracao/encomendas-takeaway.jpg` (`16:9`) — **em falta** (dedicada `REF-42`)
-- `07 Conteúdo & Redes Sociais`: `restauracao/conteudo-restauracao.jpg` (`16:9`) — **em falta** (dedicada)
-- `08 Plaquinhas QR Code Personalizadas (Pacote)`: `restauracao/pacote-restauracao-qr.jpg` (`16:9`) — **em falta** (dedicada `REF-42`)
-- *Avaliações Google / Campanhas / Integrações*: **Composição HTML/CSS** — **pendente de ligação**
+- `01 Hero`: `restauracao/hero-restauracao.jpg` (`16:9`) — **concluído** (dedicada)
+- `02 Smartphone (Menu Digital)`: `restauracao/smartphone-restauracao.jpg` (`3:4`) — **concluído** (dedicada)
+- `03 Website Profissional`: `reutilizaveis/website-portatil.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
+- `04 Menu Digital (QR Code)`: `servicos/qr-code-hero.jpg` (`16:9`) + overlay HTML/CSS — **em falta** *(reutiliza `restauracao/pacote-restauracao-qr.jpg` temporariamente)*
+- `05 Reservas Online`: `saude-bem-estar/servico-agendamento-online.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
+- `06 Encomendas & Takeaway`: `restauracao/encomendas-takeaway.jpg` (`16:9`) — **concluído** (dedicada `REF-42`)
+- `07 Conteúdo & Redes Sociais`: `restauracao/conteudo-restauracao.jpg` (`16:9`) — **concluído** (dedicada)
+- `08 Plaquinhas QR Code Personalizadas (Pacote)`: `restauracao/pacote-restauracao-qr.jpg` (`16:9`) — **concluído** (dedicada `REF-42`)
+- *Avaliações Google / Campanhas / Integrações*: **Composição HTML/CSS** — **concluído**
 
 #### 5. Retalho e E-commerce (`/por-negocio/retalho-ecommerce` — `REF-41`)
 - `01 Hero`: `retalho-ecommerce/hero-retalho.jpg` (`16:9`) — **em falta** (dedicada)
 - `02 Smartphone (Loja Online)`: `retalho-ecommerce/smartphone-retalho.jpg` (`3:4`) — **em falta** (dedicada)
 - `03 Loja Online (E-commerce)`: `servicos/lojas-online-hero.jpg` (`16:9`) + overlay HTML/CSS — **em falta** (reutilizável do serviço Lojas Online)
-- `04 Website Profissional`: `reutilizaveis/website-portatil.jpg` (`16:9`) + overlay HTML/CSS — **em falta** (reutilizável)
+- `04 Website Profissional`: `reutilizaveis/website-portatil.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
 - `05 Gestão de Produtos & Stock`: `retalho-ecommerce/gestao-stock.jpg` (`16:9`) — **em falta** (dedicada `REF-41`)
 - `06 Automação & Notificações`: `saude-bem-estar/servico-automacao-lembrete.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
 - `07 Conteúdo & Redes Sociais`: `retalho-ecommerce/conteudo-retalho.jpg` (`16:9`) — **em falta** (dedicada)
@@ -136,7 +136,7 @@ Das 8 imagens atualmente em `public/images/production/saude-bem-estar/`:
 #### 6. Serviços Profissionais (`/por-negocio/servicos-profissionais` — `REF-43`)
 - `01 Hero`: `servicos-profissionais/hero-servicos.jpg` (`16:9`) — **em falta** (dedicada)
 - `02 Smartphone`: `servicos-profissionais/smartphone-servicos.jpg` (`3:4`) — **em falta** (dedicada)
-- `03 Website Profissional`: `reutilizaveis/website-portatil.jpg` (`16:9`) + overlay HTML/CSS — **em falta** (reutilizável)
+- `03 Website Profissional`: `reutilizaveis/website-portatil.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
 - `04 Agendamento Online`: `saude-bem-estar/servico-agendamento-online.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
 - `05 CRM & Gestão de Contactos`: `saude-bem-estar/servico-crm-gestao.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
 - `06 Propostas & Orçamentos`: `servicos-profissionais/propostas-orcamentos.jpg` (`16:9`) — **em falta** (dedicada `REF-43`)
@@ -149,7 +149,7 @@ Das 8 imagens atualmente em `public/images/production/saude-bem-estar/`:
 
 | Rota | Bloco | Ref. | Tipo | Ficheiro (`public/images/production/`) | Proporção | Estado |
 | :--- | :--- | :-: | :--- | :--- | :-: | :--- |
-| `/solucoes/websites` | Hero + Card | `REF-48` *(Preto+Dourado)* | Imagem genérica reutilizável | `reutilizaveis/website-portatil.jpg` | `16:9` | **em falta** *(reutiliza `servico-agendamento-online.jpg` temporariamente)* |
+| `/solucoes/websites` | Hero + Card | `REF-48` *(Preto+Dourado)* | Imagem genérica reutilizável | `reutilizaveis/website-portatil.jpg` | `16:9` | **concluído** |
 | `/solucoes/lojas-online` | Hero + Card | `REF-24` *(Preto+Dourado)* | Imagem dedicada | `servicos/lojas-online-hero.jpg` | `16:9` | **em falta** |
 | `/solucoes/crm-sistemas` | Hero + Card | `REF-17` | Imagem genérica reutilizável | `saude-bem-estar/servico-crm-gestao.jpg` | `16:9` | **concluído** |
 | `/solucoes/marketing-digital` | Hero + Card | `REF-07` | Imagem dedicada | `servicos/marketing-digital-hero.jpg` | `16:9` | **em falta** *(reutiliza `home/hero-leadcapture.jpg` temporariamente)* |
@@ -161,13 +161,14 @@ Das 8 imagens atualmente em `public/images/production/saude-bem-estar/`:
 
 | Rota | Bloco Visual | Ref. | Classificação | Asset Utilizado (sem duplicar contagem) | Estado |
 | :--- | :--- | :-: | :--- | :--- | :--- |
-| `/solucoes` | Hero Hub | `REF-44` | Imagem genérica reutilizável | `reutilizaveis/website-portatil.jpg` *(já contado na Secção B)* | **em falta** *(aguarda geração do reutilizável)* |
-| `/solucoes` | Grelha dos 7 Serviços | `REF-44` | Asset já previsto | Reutiliza o `heroImage` de cada um dos 7 serviços da Secção D | **parcial (4/7 ligados; 3/7 aguardam geração)** |
+| `/solucoes` | Hero Hub | `REF-44` | Imagem genérica reutilizável | `reutilizaveis/website-portatil.jpg` *(já contado na Secção B)* | **concluído** |
+| `/solucoes` | Grelha dos 7 Serviços | `REF-44` | Asset já previsto | Reutiliza o `heroImage` de cada um dos 7 serviços da Secção D | **parcial (3/7 definitivos; 4/7 aguardam geração)** |
 | `/solucoes` | *Como Funciona* + *Porquê escolher* + *CTA* | `REF-44` | Composição HTML/CSS | Renderizado em código (ícones + tipografia + botões) | **concluído** |
-| `/demonstracoes` | Hero Demonstrações | `REF-05` | Imagem genérica reutilizável | `reutilizaveis/website-portatil.jpg` *(já contado na Secção B)* | **em falta** *(aguarda geração do reutilizável)* |
-| `/demonstracoes` | Grelha dos 6 Setores Ativos | `REF-05` | Asset já previsto | Reutiliza o `heroImage` de cada um dos 6 setores ativos da Secção C | **parcial (2/6 ligados; 4/6 aguardam geração)** |
+| `/demonstracoes` | Hero Demonstrações | `REF-05` | Imagem genérica reutilizável | `reutilizaveis/website-portatil.jpg` *(já contado na Secção B)* | **concluído** |
+| `/demonstracoes` | Grelha dos 6 Setores Ativos | `REF-05` | Asset já previsto | Reutiliza o `heroImage` de cada um dos 6 setores ativos da Secção C | **parcial (4/6 ligados; 2/6 aguardam geração)** |
 | `/demonstracoes` | 3 Setores de Expansão (*Construção*, *Hotelaria*, *Automóvel*) | `REF-05` | **Fora do âmbito desta ronda** (HTML/CSS) | Mantidos como cartões informativos HTML/CSS sem rota ativa; imagens dedicadas ficam para a fase de ativação desses setores | **fora do âmbito desta ronda** |
 | `/demonstracoes` | *CTA Banner* | `REF-05` | Composição HTML/CSS | Renderizado em código | **concluído** |
 
-> **Contagem final fechada (zero duplicações):** **38 ficheiros únicos** = **10 concluídos** + **28 por gerar no Nano Banana** (`REF-44` e `REF-05` acrescentam `0` novos ficheiros).
+> **Contagem final fechada (zero duplicações):** **38 ficheiros únicos** = **23 concluídos** + **15 por gerar no Nano Banana** (`REF-44` e `REF-05` acrescentam `0` novos ficheiros).
+
 
