@@ -412,9 +412,26 @@ export default function ContactosPage() {
                   )}
                 </button>
 
-                <div className="flex items-center gap-2 text-xs text-zinc-400 pt-1">
-                  <ShieldCheck className="w-4 h-4 text-[#F5B800] shrink-0" />
-                  <span>Os seus dados serão utilizados apenas para responder ao seu contacto.</span>
+                <div className="flex items-start gap-2 text-xs text-zinc-400 pt-1">
+                  <ShieldCheck className="w-4 h-4 text-[#F5B800] shrink-0 mt-0.5" />
+                  <span>
+                    Os seus dados serão utilizados apenas para responder ao seu contacto. Consulte
+                    os rascunhos de{" "}
+                    <Link
+                      href="/politica-de-privacidade"
+                      className="text-zinc-200 underline hover:text-[#F5B800]"
+                    >
+                      Política de Privacidade
+                    </Link>{" "}
+                    e{" "}
+                    <Link
+                      href="/termos-e-condicoes"
+                      className="text-zinc-200 underline hover:text-[#F5B800]"
+                    >
+                      Termos e Condições
+                    </Link>
+                    .
+                  </span>
                 </div>
               </form>
             </div>

@@ -547,11 +547,25 @@ export default function PedirOrcamentoPage() {
                   )}
                 </button>
 
-                <div className="flex items-center gap-2 text-xs text-zinc-400">
-                  <Lock className="w-4 h-4 text-[#F5B800] shrink-0" />
+                <div className="flex items-start gap-2 text-xs text-zinc-400">
+                  <Lock className="w-4 h-4 text-[#F5B800] shrink-0 mt-0.5" />
                   <span>
-                    Os seus dados estão protegidos e serão utilizados apenas para responder ao seu
-                    pedido.
+                    Os seus dados serão utilizados apenas para responder ao seu pedido. Consulte os
+                    rascunhos de{" "}
+                    <Link
+                      href="/politica-de-privacidade"
+                      className="text-zinc-200 underline hover:text-[#F5B800]"
+                    >
+                      Política de Privacidade
+                    </Link>{" "}
+                    e{" "}
+                    <Link
+                      href="/termos-e-condicoes"
+                      className="text-zinc-200 underline hover:text-[#F5B800]"
+                    >
+                      Termos e Condições
+                    </Link>
+                    .
                   </span>
                 </div>
               </form>
