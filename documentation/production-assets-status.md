@@ -1,6 +1,6 @@
 # Inventário Reconciliado de Assets de Produção (`public/images/production/`)
 
-> **Última reconciliação:** 2026-11-22  
+> **Última reconciliação:** 2026-11-25  
 > **Fontes cruzadas:** `REF-26` (*Lista de Imagens para o Antigravity*), referências individuais de cada setor (`REF-15`, `REF-23`, `REF-16`, `REF-42`, `REF-41`, `REF-43`), serviços (`REF-01`, `REF-07`, `REF-17`, `REF-24`, `REF-30`, `REF-45`, `REF-48`), institucionais (`REF-11`, `REF-18`, `REF-35`), ficheiros existentes em `public/images/production/` e ligações ativas em `src/`.  
 > **Regra de estado:** Um asset só é marcado como **`concluído`** quando o ficheiro existe em disco **e** está ligado à página respetiva.
 
@@ -31,10 +31,10 @@ Das 8 imagens atualmente em `public/images/production/saude-bem-estar/`:
   - `servico-website-clinica.jpg` *(contém elementos clínicos no ecrã — por isso NÃO é reutilizada fora de Saúde)*
   - `servico-conteudo-profissional.jpg`
   - `pacote-ambiente-clinica.jpg`
-- **3 são fotografias neutras de hardware** atualmente reutilizadas noutras rotas:
-  1. `saude-bem-estar/servico-agendamento-online.jpg` (tablet preto + caneta dourada) → ligada em `/por-negocio/imobiliario` (*Agendamento de Visitas*) e `/solucoes/websites` *(temporariamente, até existir `reutilizaveis/website-portatil.jpg`)*.
-  2. `saude-bem-estar/servico-crm-gestao.jpg` (monitor executivo com barras douradas) → ligada em `/por-negocio/imobiliario` (*CRM de Leads*) e `/solucoes/crm-sistemas`.
-  3. `saude-bem-estar/servico-automacao-lembrete.jpg` (smartphone preto com friso dourado) → ligada em `/por-negocio/imobiliario` (*Automação & Follow-up*) e `/solucoes/automacao-ia`.
+- **3 são fotografias neutras de hardware** reutilizadas noutras rotas:
+  1. `saude-bem-estar/servico-agendamento-online.jpg` (tablet preto + caneta dourada) → ligada nos setores aplicáveis.
+  2. `saude-bem-estar/servico-crm-gestao.jpg` (monitor executivo com barras douradas) → ligada nos setores aplicáveis e em `/solucoes/crm-sistemas`.
+  3. `saude-bem-estar/servico-automacao-lembrete.jpg` (smartphone preto com friso dourado) → ligada nos setores aplicáveis e em `/solucoes/automacao-ia`.
 
 *(Estas 3 imagens neutras são adequadas como **imagens genéricas reutilizáveis** em todos os setores para Agendamento, CRM e Automação, sempre acompanhadas de faixas de texto em HTML/CSS específicas do setor.)*
 
@@ -50,10 +50,10 @@ Das 8 imagens atualmente em `public/images/production/saude-bem-estar/`:
 | **Imobiliário (`REF-23`)** | 4 (`hero`, `smartphone`, `conteudo`, `pacote`) | 0 | **4** |
 | **Beleza e Estética (`REF-16`)** | 4 (`hero`, `smartphone`, `conteudo`, `pacote`) | 0 | **4** |
 | **Restauração (`REF-42`)** | 5 (`hero`, `smartphone`, `encomendas-takeaway`, `conteudo`, `pacote-qr`) | 0 | **5** |
-| **Retalho e E-commerce (`REF-41`)** | 0 | 5 (`hero`, `smartphone`, `gestao-stock`, `conteudo`, `pacote`) | **5** |
-| **Serviços Profissionais (`REF-43`)** | 0 | 5 (`hero`, `smartphone`, `propostas-orcamentos`, `conteudo`, `pacote`) | **5** |
-| **Serviços dedicados (`/solucoes/[slug]`)** | 0 *(3 usam hardware neutro)* | 4 (`lojas-online`, `marketing-digital`, `redes-sociais`, `qr-code`) | **4** |
-| **TOTAL GERAL DA RONDA VISUAL** | **23** | **15** | **38** |
+| **Retalho e E-commerce (`REF-41`)** | 5 (`hero`, `smartphone`, `gestao-stock`, `conteudo`, `pacote`) | 0 | **5** |
+| **Serviços Profissionais (`REF-43`)** | 5 (`hero`, `smartphone`, `propostas-orcamentos`, `conteudo`, `pacote`) | 0 | **5** |
+| **Serviços dedicados (`/solucoes/[slug]`)** | 3 (`lojas-online`, `marketing-digital`, `redes-sociais`) | 1 (`servicos/qr-code-hero.jpg`) | **4** |
+| **TOTAL GERAL DA RONDA VISUAL** | **36** | **2** | **38** |
 
 ---
 
@@ -123,52 +123,53 @@ Das 8 imagens atualmente em `public/images/production/saude-bem-estar/`:
 - *Avaliações Google / Campanhas / Integrações*: **Composição HTML/CSS** — **concluído**
 
 #### 5. Retalho e E-commerce (`/por-negocio/retalho-ecommerce` — `REF-41`)
-- `01 Hero`: `retalho-ecommerce/hero-retalho.jpg` (`16:9`) — **em falta** (dedicada)
-- `02 Smartphone (Loja Online)`: `retalho-ecommerce/smartphone-retalho.jpg` (`3:4`) — **em falta** (dedicada)
-- `03 Loja Online (E-commerce)`: `servicos/lojas-online-hero.jpg` (`16:9`) + overlay HTML/CSS — **em falta** (reutilizável do serviço Lojas Online)
-- `04 Website Profissional`: `reutilizaveis/website-portatil.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
-- `05 Gestão de Produtos & Stock`: `retalho-ecommerce/gestao-stock.jpg` (`16:9`) — **em falta** (dedicada `REF-41`)
-- `06 Automação & Notificações`: `saude-bem-estar/servico-automacao-lembrete.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
-- `07 Conteúdo & Redes Sociais`: `retalho-ecommerce/conteudo-retalho.jpg` (`16:9`) — **em falta** (dedicada)
-- `08 Pacote Retalho 360°`: `retalho-ecommerce/pacote-retalho.jpg` (`16:9`) — **em falta** (dedicada)
-- *Campanhas / Avaliações Google / Integrações*: **Composição HTML/CSS** — **pendente de ligação**
+- `01 Hero`: `retalho-ecommerce/hero-retalho.jpg` (`16:9`) — **concluído** (dedicada)
+- `02 Smartphone (Loja Online)`: `retalho-ecommerce/smartphone-retalho.jpg` (`3:4`) — **concluído** (dedicada)
+- `03 Loja Online (E-commerce)`: `servicos/lojas-online-hero.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável do serviço Lojas Online)
+- `04 Website Profissional`: `reutilizaveis/website-portatil.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
+- `05 Gestão de Produtos & Stock`: `retalho-ecommerce/gestao-stock.jpg` (`16:9`) — **concluído** (dedicada `REF-41`)
+- `06 Automação & Notificações`: `saude-bem-estar/servico-automacao-lembrete.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
+- `07 Conteúdo & Redes Sociais`: `retalho-ecommerce/conteudo-retalho.jpg` (`16:9`) — **concluído** (dedicada)
+- `08 Pacote Retalho 360°`: `retalho-ecommerce/pacote-retalho.jpg` (`16:9`) — **concluído** (dedicada)
+- *Campanhas / Avaliações Google / Integrações*: **Composição HTML/CSS** — **concluído**
 
 #### 6. Serviços Profissionais (`/por-negocio/servicos-profissionais` — `REF-43`)
-- `01 Hero`: `servicos-profissionais/hero-servicos.jpg` (`16:9`) — **em falta** (dedicada)
-- `02 Smartphone`: `servicos-profissionais/smartphone-servicos.jpg` (`3:4`) — **em falta** (dedicada)
-- `03 Website Profissional`: `reutilizaveis/website-portatil.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
-- `04 Agendamento Online`: `saude-bem-estar/servico-agendamento-online.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
-- `05 CRM & Gestão de Contactos`: `saude-bem-estar/servico-crm-gestao.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
-- `06 Propostas & Orçamentos`: `servicos-profissionais/propostas-orcamentos.jpg` (`16:9`) — **em falta** (dedicada `REF-43`)
-- `07 Automação & Comunicação`: `saude-bem-estar/servico-automacao-lembrete.jpg` (`16:9`) + overlay HTML/CSS — **pendente de ligação** (reutilizável já em disco)
-- `08 Conteúdo Profissional`: `servicos-profissionais/conteudo-servicos.jpg` (`16:9`) — **em falta** (dedicada)
-- `09 Pacote Profissional 360°`: `servicos-profissionais/pacote-servicos.jpg` (`16:9`) — **em falta** (dedicada)
-- *Avaliações Google / Integrações*: **Composição HTML/CSS** — **pendente de ligação**
+- `01 Hero`: `servicos-profissionais/hero-servicos.jpg` (`16:9`) — **concluído** (dedicada)
+- `02 Smartphone`: `servicos-profissionais/smartphone-servicos.jpg` (`3:4`) — **concluído** (dedicada)
+- `03 Website Profissional`: `reutilizaveis/website-portatil.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
+- `04 Agendamento Online`: `saude-bem-estar/servico-agendamento-online.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
+- `05 CRM & Gestão de Contactos`: `saude-bem-estar/servico-crm-gestao.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
+- `06 Propostas & Orçamentos`: `servicos-profissionais/propostas-orcamentos.jpg` (`16:9`) — **concluído** (dedicada `REF-43`)
+- `07 Automação & Comunicação`: `saude-bem-estar/servico-automacao-lembrete.jpg` (`16:9`) + overlay HTML/CSS — **concluído** (reutilizável)
+- `08 Conteúdo Profissional`: `servicos-profissionais/conteudo-servicos.jpg` (`16:9`) — **concluído** (dedicada)
+- `09 Pacote Profissional 360°`: `servicos-profissionais/pacote-servicos.jpg` (`16:9`) — **concluído** (dedicada)
+- *Avaliações Google / Integrações*: **Composição HTML/CSS** — **concluído**
 
 ### D. Páginas de Serviços (`/solucoes/[slug]`)
 
 | Rota | Bloco | Ref. | Tipo | Ficheiro (`public/images/production/`) | Proporção | Estado |
 | :--- | :--- | :-: | :--- | :--- | :-: | :--- |
 | `/solucoes/websites` | Hero + Card | `REF-48` *(Preto+Dourado)* | Imagem genérica reutilizável | `reutilizaveis/website-portatil.jpg` | `16:9` | **concluído** |
-| `/solucoes/lojas-online` | Hero + Card | `REF-24` *(Preto+Dourado)* | Imagem dedicada | `servicos/lojas-online-hero.jpg` | `16:9` | **em falta** |
+| `/solucoes/lojas-online` | Hero + Card | `REF-24` *(Preto+Dourado)* | Imagem dedicada | `servicos/lojas-online-hero.jpg` | `16:9` | **concluído** |
 | `/solucoes/crm-sistemas` | Hero + Card | `REF-17` | Imagem genérica reutilizável | `saude-bem-estar/servico-crm-gestao.jpg` | `16:9` | **concluído** |
-| `/solucoes/marketing-digital` | Hero + Card | `REF-07` | Imagem dedicada | `servicos/marketing-digital-hero.jpg` | `16:9` | **em falta** *(reutiliza `home/hero-leadcapture.jpg` temporariamente)* |
+| `/solucoes/marketing-digital` | Hero + Card | `REF-07` | Imagem dedicada | `servicos/marketing-digital-hero.jpg` | `16:9` | **concluído** |
 | `/solucoes/automacao-ia` | Hero + Card | `REF-01` | Imagem genérica reutilizável | `saude-bem-estar/servico-automacao-lembrete.jpg` | `16:9` | **concluído** |
-| `/solucoes/redes-sociais` | Hero + Card | `REF-30` | Imagem dedicada | `servicos/redes-sociais-hero.jpg` | `16:9` | **em falta** |
-| `/solucoes/qr-code` | Hero + Card | `REF-45` | Imagem dedicada | `servicos/qr-code-hero.jpg` | `16:9` | **em falta** |
+| `/solucoes/redes-sociais` | Hero + Card | `REF-30` | Imagem dedicada | `servicos/redes-sociais-hero.jpg` | `16:9` | **concluído** |
+| `/solucoes/qr-code` | Hero + Card | `REF-45` | Imagem dedicada | `servicos/qr-code-hero.jpg` | `16:9` | **em falta** *(aguarda reposição de quota às 23:15 UTC)* |
 
 ### E. Hubs Comerciais (`REF-44` `/solucoes` e `REF-05` `/demonstracoes`) — **0 ficheiros novos**
 
 | Rota | Bloco Visual | Ref. | Classificação | Asset Utilizado (sem duplicar contagem) | Estado |
 | :--- | :--- | :-: | :--- | :--- | :--- |
 | `/solucoes` | Hero Hub | `REF-44` | Imagem genérica reutilizável | `reutilizaveis/website-portatil.jpg` *(já contado na Secção B)* | **concluído** |
-| `/solucoes` | Grelha dos 7 Serviços | `REF-44` | Asset já previsto | Reutiliza o `heroImage` de cada um dos 7 serviços da Secção D | **parcial (3/7 definitivos; 4/7 aguardam geração)** |
+| `/solucoes` | Grelha dos 7 Serviços | `REF-44` | Asset já previsto | Reutiliza o `heroImage` de cada um dos 7 serviços da Secção D | **6/7 ligados; falta apenas `qr-code-hero.jpg`** |
 | `/solucoes` | *Como Funciona* + *Porquê escolher* + *CTA* | `REF-44` | Composição HTML/CSS | Renderizado em código (ícones + tipografia + botões) | **concluído** |
 | `/demonstracoes` | Hero Demonstrações | `REF-05` | Imagem genérica reutilizável | `reutilizaveis/website-portatil.jpg` *(já contado na Secção B)* | **concluído** |
-| `/demonstracoes` | Grelha dos 6 Setores Ativos | `REF-05` | Asset já previsto | Reutiliza o `heroImage` de cada um dos 6 setores ativos da Secção C | **parcial (4/6 ligados; 2/6 aguardam geração)** |
+| `/demonstracoes` | Grelha dos 6 Setores Ativos | `REF-05` | Asset já previsto | Reutiliza o `heroImage` de cada um dos 6 setores ativos da Secção C | **concluído (6/6 ligados)** |
 | `/demonstracoes` | 3 Setores de Expansão (*Construção*, *Hotelaria*, *Automóvel*) | `REF-05` | **Fora do âmbito desta ronda** (HTML/CSS) | Mantidos como cartões informativos HTML/CSS sem rota ativa; imagens dedicadas ficam para a fase de ativação desses setores | **fora do âmbito desta ronda** |
 | `/demonstracoes` | *CTA Banner* | `REF-05` | Composição HTML/CSS | Renderizado em código | **concluído** |
 
-> **Contagem final fechada (zero duplicações):** **38 ficheiros únicos** = **23 concluídos** + **15 por gerar no Nano Banana** (`REF-44` e `REF-05` acrescentam `0` novos ficheiros).
+> **Contagem final fechada (zero duplicações):** **38 ficheiros únicos** = **36 concluídos** + **2 por gerar no Nano Banana** (`servicos/qr-code-hero.jpg` e `institucional/contactos-almada-ponte.jpg`).
+
 
 

@@ -91,6 +91,9 @@ export const SERVICES: ServiceItem[] = [
     heroHighlight: "design premium.",
     heroDescription:
       "Venda os seus produtos e serviços em qualquer lugar com uma loja online moderna, segura e integrada com as ferramentas do seu negócio.",
+    heroImage: "/images/production/servicos/lojas-online-hero.jpg",
+    heroImageAlt:
+      "Portátil preto, smartphone e caixas de oferta com fitas douradas sobre pedra escura em estúdio de e-commerce",
     checklist: [
       "Design moderno e personalizado à sua marca",
       "Gestão simples de produtos, stock e encomendas",
@@ -198,9 +201,9 @@ export const SERVICES: ServiceItem[] = [
     heroHighlight: "Digital",
     heroDescription:
       "Estratégia, campanhas e análise de performance para atrair mais clientes, gerar contactos qualificados e apoiar o crescimento do negócio.",
-    heroImage: "/images/production/home/hero-leadcapture.jpg",
+    heroImage: "/images/production/servicos/marketing-digital-hero.jpg",
     heroImageAlt:
-      "Equipa de estratégia digital em estúdio moderno com iluminação dourada a analisar campanhas",
+      "Equipa de estratégia digital em estúdio moderno com iluminação dourada e curvas luminosas de crescimento em ecrã panorâmico",
     checklist: [
       "Estratégia personalizada por setor de negócio",
       "Campanhas no Google e Meta (Instagram e Facebook)",
@@ -307,6 +310,9 @@ export const SERVICES: ServiceItem[] = [
     heroHighlight: "Sociais",
     heroDescription:
       "Gerimos a sua presença nas redes sociais com estratégia, conteúdos consistentes e foco em posicionamento e resultados.",
+    heroImage: "/images/production/servicos/redes-sociais-hero.jpg",
+    heroImageAlt:
+      "Estúdio criativo de produção para redes sociais com anel de luz dourado, smartphone em gimbal, câmara e monitor de cor",
     checklist: [
       "Planeamento estratégico e calendário editorial",
       "Criação de design e conteúdos visuais",
