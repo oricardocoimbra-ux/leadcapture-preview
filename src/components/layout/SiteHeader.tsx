@@ -3,19 +3,17 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight, ChevronDown, Menu, ShoppingCart, X } from "lucide-react";
+import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 import { LeadCaptureLogo } from "@/components/ui/LeadCaptureLogo";
 import { DynamicIcon } from "@/components/ui/DynamicIcon";
 import { MAIN_NAV } from "@/data/site-data";
 import { SERVICES } from "@/data/services";
 import { SECTORS } from "@/data/sectors";
-import { useCart } from "@/components/cart/CartProvider";
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<"solucoes" | "por-negocio" | null>(null);
-  const { totalCount } = useCart();
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -113,19 +111,13 @@ export function SiteHeader() {
           })}
         </nav>
 
-        {/* Desktop Primary CTA & Cart */}
-        <div className="hidden lg:flex items-center gap-3">
+        {/* Desktop Primary CTAs (Institutional Mode: Quote & Demo) */}
+        <div className="hidden lg:flex items-center gap-2.5">
           <Link
-            href="/carrinho"
-            aria-label="Abrir Carrinho"
-            className="relative p-2.5 rounded-full border border-amber-500/25 bg-[#101218] text-white hover:border-[#F5B800] hover:text-[#F5B800] transition-colors"
+            href="/pedir-orcamento"
+            className="lc-btn-secondary px-4 py-2.5 text-sm inline-flex items-center"
           >
-            <ShoppingCart className="w-4 h-4" />
-            {totalCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full bg-[#F5B800] text-[#050507] text-[10px] font-extrabold flex items-center justify-center">
-                {totalCount}
-              </span>
-            )}
+            Pedir Orçamento
           </Link>
           <Link
             href="/pedir-demonstracao"
@@ -136,20 +128,8 @@ export function SiteHeader() {
           </Link>
         </div>
 
-        {/* Mobile Cart & Menu Button */}
+        {/* Mobile Menu Button */}
         <div className="lg:hidden flex items-center gap-2">
-          <Link
-            href="/carrinho"
-            aria-label="Abrir Carrinho"
-            className="relative p-2 rounded-xl border border-amber-500/25 bg-[#101218] text-white"
-          >
-            <ShoppingCart className="w-5 h-5" />
-            {totalCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 min-w-4 h-4 px-1 rounded-full bg-[#F5B800] text-[#050507] text-[10px] font-extrabold flex items-center justify-center">
-                {totalCount}
-              </span>
-            )}
-          </Link>
           <button
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -217,7 +197,14 @@ export function SiteHeader() {
             </div>
           </div>
 
-          <div className="pt-3">
+          <div className="pt-3 grid gap-2">
+            <Link
+              href="/pedir-orcamento"
+              onClick={() => setMobileOpen(false)}
+              className="lc-btn-secondary w-full py-3 inline-flex items-center justify-center text-sm"
+            >
+              Pedir Orçamento
+            </Link>
             <Link
               href="/pedir-demonstracao"
               onClick={() => setMobileOpen(false)}

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Play, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import { SECTORS, EXPANSION_SECTORS } from "@/data/sectors";
@@ -5,6 +6,13 @@ import { SERVICES } from "@/data/services";
 import { PROCESS_STEPS } from "@/data/site-data";
 import { DynamicIcon } from "@/components/ui/DynamicIcon";
 import { CtaBanner } from "@/components/ui/CtaBanner";
+
+export const metadata: Metadata = {
+  title: "LeadCapture — Parceiro 360° em Soluções Digitais",
+  description:
+    "Websites profissionais, lojas online, CRM, automação com IA, marketing digital e soluções à medida por setor em Portugal.",
+  alternates: { canonical: "/" },
+};
 
 export default function HomePage() {
   return (

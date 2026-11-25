@@ -4,13 +4,23 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { CartProvider } from "@/components/cart/CartProvider";
 
+const isProductionDeployment = process.env.VERCEL_ENV === "production";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://leadcapture.cloud";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: "LeadCapture — Parceiro 360° em Soluções Digitais",
     template: "%s | LeadCapture",
   },
   description:
     "Websites, lojas online, CRM, automação e IA, marketing digital e soluções por setor para empresas que querem crescer com organização e tecnologia.",
+  alternates: {
+    canonical: "./",
+  },
+  robots: isProductionDeployment
+    ? { index: true, follow: true }
+    : { index: false, follow: false },
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [

@@ -109,16 +109,6 @@ export function SiteFooter() {
                   Contactos
                 </Link>
               </li>
-              <li>
-                <Link href="/area-cliente" className="hover:text-[#F5B800] transition-colors font-semibold text-zinc-300">
-                  Área de Cliente
-                </Link>
-              </li>
-              <li>
-                <Link href="/login" className="hover:text-white transition-colors">
-                  Iniciar Sessão
-                </Link>
-              </li>
             </ul>
           </div>
         </div>
@@ -126,12 +116,18 @@ export function SiteFooter() {
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
           <p>© {new Date().getFullYear()} LeadCapture. Todos os direitos reservados.</p>
           <div className="flex items-center gap-4">
-            <Link href="/contactos" className="hover:text-zinc-300 transition-colors">
-              Política de Privacidade (em preparação)
+            <Link
+              href="/politica-de-privacidade"
+              className="hover:text-zinc-300 transition-colors"
+            >
+              Política de Privacidade (rascunho)
             </Link>
             <span>|</span>
-            <Link href="/contactos" className="hover:text-zinc-300 transition-colors">
-              Termos e Condições (em preparação)
+            <Link
+              href="/termos-e-condicoes"
+              className="hover:text-zinc-300 transition-colors"
+            >
+              Termos e Condições (rascunho)
             </Link>
           </div>
         </div>

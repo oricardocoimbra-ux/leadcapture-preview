@@ -256,7 +256,7 @@ export const FAQ_ITEMS: FaqItem[] = [
 ];
 
 export const CONTACT_INFO = {
-  email: "[geral@leadcapture.cloud — a confirmar]",
+  email: "geral@leadcapture.cloud",
   phone: "[+351 XXX XXX XXX — a confirmar]",
   whatsappLabel: "[WhatsApp oficial — a confirmar]",
   location: "Portugal [Morada / Zona de atendimento a confirmar]",
